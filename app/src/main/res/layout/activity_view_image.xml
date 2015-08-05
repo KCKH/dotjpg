@@ -1,0 +1,18 @@
+<!--
+  ~ Copyright (c) 2015  Alashov Berkeli
+  ~ It is licensed under GNU GPL v. 2 or later. For full terms see the file LICENSE.
+  -->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <tm.alashow.dotjpg.ui.view.HackyViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </tm.alashow.dotjpg.ui.view.HackyViewPager>
+</FrameLayout>

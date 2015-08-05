@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015  Alashov Berkeli
+  ~ It is licensed under GNU GPL v. 2 or later. For full terms see the file LICENSE.
+  -->
+
+<RelativeLayout
+    android:id="@+id/navigation_drawer_user"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+</RelativeLayout>

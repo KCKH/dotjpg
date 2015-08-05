@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015  Alashov Berkeli
+  ~ It is licensed under GNU GPL v. 2 or later. For full terms see the file LICENSE.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <tm.alashow.dotjpg.ui.widget.PreferencesCategory
+        android:title="@string/other">
+        <Preference
+            android:key="session_id"
+            android:title="@string/preferences.session"
+            android:summary="@string/preferences.session.summary"/>
+        <Preference
+            android:key="about"
+            android:title="@string/preferences.about"/>
+    </tm.alashow.dotjpg.ui.widget.PreferencesCategory>
+
+</PreferenceScreen>
