@@ -6,7 +6,6 @@
 package tm.alashow.dotjpg.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ClipData;
@@ -30,6 +29,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -47,10 +47,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
 
 import tm.alashow.dotjpg.App;
 import tm.alashow.dotjpg.Config;
@@ -79,7 +75,11 @@ public class U {
      * Hide view if it's visibility equals android.view.View.VISIBLE
      */
     public static void hideViewIfVisible(View _view) {
-        if (_view != null) if (_view.getVisibility() == View.VISIBLE) hideView(_view);
+        if (_view != null) {
+            if (_view.getVisibility() == View.VISIBLE) {
+                hideView(_view);
+            }
+        }
     }
 
     /**
@@ -100,8 +100,11 @@ public class U {
      */
     public static void toggleView(View _view) {
         if (_view != null) {
-            if (_view.getVisibility() == View.VISIBLE) hideView(_view);
-            else showView(_view);
+            if (_view.getVisibility() == View.VISIBLE) {
+                hideView(_view);
+            } else {
+                showView(_view);
+            }
         }
     }
 
@@ -127,8 +130,9 @@ public class U {
      * @param newFragment new fragment
      */
     public static void attachFragment(AppCompatActivity _activity, Fragment newFragment) {
-        if (_activity.findViewById(R.id.container) != null)
+        if (_activity.findViewById(R.id.container) != null) {
             _activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, newFragment).commit();
+        }
     }
 
     /**
@@ -144,8 +148,12 @@ public class U {
 
 
     public static void l(String message) {
-        if (! Config.DEBUG) return;
-        if (message != null && message.equals("")) return;
+        if (! Config.DEBUG) {
+            return;
+        }
+        if (message != null && message.equals("")) {
+            return;
+        }
         Log.d(Config.LOG_APP_NAME, message);
     }
 
@@ -199,7 +207,7 @@ public class U {
      * @return #f2f2f2 colored drawable
      */
     public static Drawable imagePlaceholder() {
-        return new ColorDrawable(Color.parseColor("#d9d9d9"));
+        return new ColorDrawable(Color.parseColor("#e6e6e6"));
     }
 
     /**
@@ -267,12 +275,17 @@ public class U {
      * @param show show or hide
      */
     public static void keyboard(View view, boolean show) {
-        if (show) showKeyboard(view);
-        else hideKeyboard(view);
+        if (show) {
+            showKeyboard(view);
+        } else {
+            hideKeyboard(view);
+        }
     }
 
     public static void showKeyboard(View view) {
-        if (view == null) return;
+        if (view == null) {
+            return;
+        }
         InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 
@@ -280,9 +293,13 @@ public class U {
     }
 
     public static void hideKeyboard(View view) {
-        if (view == null) return;
+        if (view == null) {
+            return;
+        }
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (! imm.isActive()) return;
+        if (! imm.isActive()) {
+            return;
+        }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -342,8 +359,12 @@ public class U {
     }
 
     public static void showCenteredToast(Context context, String string) {
-        if (context == null) return;
-        if (string == null || string.equals("")) string = "null";
+        if (context == null) {
+            return;
+        }
+        if (string == null || string.equals("")) {
+            string = "null";
+        }
         Toast toast = Toast.makeText(context, string, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
@@ -375,10 +396,12 @@ public class U {
             if (snackbar != null) {
                 if (style > SNACK_DEFAULT) {
                     TextView snackText = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-                    if (style == SNACK_SUCCESS)
+                    if (style == SNACK_SUCCESS) {
                         snackText.setTextColor(view.getContext().getResources().getColor(R.color.green));
-                    if (style == SNACK_ERROR)
+                    }
+                    if (style == SNACK_ERROR) {
                         snackText.setTextColor(view.getContext().getResources().getColor(R.color.red_light));
+                    }
                 }
                 snackbar.show();
             }
@@ -437,6 +460,9 @@ public class U {
         return new BigInteger(250, new SecureRandom()).toString(32);
     }
 
+    public static String randomFileName() {
+        return new BigInteger(50, new SecureRandom()).toString(32);
+    }
 
     /**
      * Get screen width in pixels
@@ -463,13 +489,15 @@ public class U {
 
         String extension = imageUrl;
         int i = extension.lastIndexOf('.');
-        if (i >= 0) extension = extension.substring(i);
+        if (i >= 0) {
+            extension = extension.substring(i);
+        }
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(downloadUri);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-            .setDestinationInExternalPublicDir("/" + Config.LOCAL_IMAGES_FOLDER, UUID.randomUUID().toString().replace("-", "").substring(0, 10) + extension);
+            .setDestinationInExternalPublicDir("/" + Config.LOCAL_IMAGES_FOLDER, randomFileName() + extension);
 
         downloadManager.enqueue(request);
         U.showCenteredToast(context, R.string.image_downloading);
@@ -499,11 +527,13 @@ public class U {
      *
      * @param bytes size of file in bytes
      * @param si    is si unit
-     * @return 110 kB like size
+     * @return "110 kB" like size
      */
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
-        if (bytes < unit) return bytes + " B";
+        if (bytes < unit) {
+            return bytes + " B";
+        }
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
@@ -531,12 +561,12 @@ public class U {
         activity.startActivityForResult(intent, RESULT_CAMERA);
     }
 
-    private static File getAlbumDir() {
-        File storageDir = null;
+    private static File getBaseFolder() {
+        File baseFolder = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            storageDir = new File(Environment.getExternalStorageDirectory(), Config.LOCAL_IMAGES_FOLDER);
-            if (! storageDir.mkdirs()) {
-                if (! storageDir.exists()) {
+            baseFolder = new File(Environment.getExternalStorageDirectory(), Config.LOCAL_IMAGES_FOLDER);
+            if (! baseFolder.mkdirs()) {
+                if (! baseFolder.exists()) {
                     U.l("failed to create directory");
                     return null;
                 }
@@ -545,14 +575,34 @@ public class U {
             U.l("External storage is not mounted READ/WRITE.");
         }
 
-        return storageDir;
+        return baseFolder;
+    }
+
+    public static File getCompressedFileFolder() {
+        File baseFolder = getBaseFolder();
+        File tempFolder = new File(baseFolder, Config.LOCAL_IMAGES_COMPRESSED_TEMP);
+        tempFolder.mkdirs();
+        return tempFolder;
+    }
+
+    public static File generateCompressFilePath() {
+        File tempFolder = getCompressedFileFolder();
+        return new File(tempFolder, randomFileName() + ".jpg");
+    }
+
+    public static void clearTempCompressedFiles() {
+        File tempFolder = getCompressedFileFolder();
+        if (tempFolder.isDirectory()) {
+            String[] files = tempFolder.list();
+            for(int i = 0; i < files.length; i++)
+                new File(tempFolder, files[i]).delete();
+        }
     }
 
     public static File generatePicturePath() {
         try {
-            File storageDir = getAlbumDir();
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(new Date());
-            return new File(storageDir, "IMG_" + timestamp + ".jpg");
+            File baseFolder = getBaseFolder();
+            return new File(baseFolder, randomFileName() + ".jpg");
         } catch (Exception e) {
             e.printStackTrace();
         }

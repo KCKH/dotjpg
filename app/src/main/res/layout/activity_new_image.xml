@@ -28,7 +28,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:listSelector="@drawable/white_selector"
                 android:layout_above="@+id/upload"/>
+
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="100dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_xlarge"
+                android:text="@string/image.new.empty"/>
 
             <Button
                 android:id="@+id/upload"

@@ -16,6 +16,8 @@
     <color name="secondary_text_color">#727272</color>
 
     <color name="white_selector">#b7b7b7</color>
+    <color name="ripple_white">#30b7b7b7</color>
+    <color name="ripple_white_v21">#70b7b7b7</color>
     <color name="divider">#ffe5e5e5</color>
 
     <color name="white">#FFFFFF</color>
@@ -51,4 +53,5 @@
     <color name="disabled">#D1D5D8</color>
     <color name="disabled_edge">#F7F9F9</color>
     <color name="disabled_border">#E1E6E6</color>
+
 </resources>

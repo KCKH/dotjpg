@@ -15,7 +15,7 @@ import java.io.File;
 public class NewImage {
     private File originFile;
     private File compressedFile;
-
+    private boolean compressed = false;
 
     public File getOriginFile() {
         return originFile;
@@ -35,15 +35,28 @@ public class NewImage {
         return this;
     }
 
+    public boolean isCompressed() {
+        return compressed;
+    }
+
+    public NewImage setCompressed(boolean compressed) {
+        this.compressed = compressed;
+        return this;
+    }
+
     public long getSize() {
         return getFile().length();
     }
 
     public File getFile() {
-        return getCompressedFile() != null ? getCompressedFile() : getOriginFile();
+        return (isCheckedCompressed() && compressed) ? getCompressedFile() : getOriginFile();
     }
 
     public Uri getUri() {
         return Uri.fromFile(getFile());
+    }
+
+    public boolean isCheckedCompressed() {
+        return getCompressedFile() != null && getCompressedFile().exists();
     }
 }

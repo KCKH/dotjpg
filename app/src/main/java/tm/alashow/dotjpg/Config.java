@@ -16,6 +16,7 @@ public class Config {
     public static boolean DEBUG = BuildConfig.DEBUG;
     public static String LOG_APP_NAME = "dotjpg App";
     public static String LOCAL_IMAGES_FOLDER = "dotjpg";
+    public static String LOCAL_IMAGES_COMPRESSED_TEMP = ".temp_compressed";
 
     //Activity tags
     public static String ACTIVITY_TAG_MAIN = "main";

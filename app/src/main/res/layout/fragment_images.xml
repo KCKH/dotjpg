@@ -10,18 +10,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="wrap_content">
 
         <tm.alashow.dotjpg.ui.view.EndlessRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/progress"

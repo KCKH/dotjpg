@@ -40,6 +40,9 @@
     <string name="image.downloading">Indirilýär..</string>
 
     <string name="image.new.title">Surat ýükle</string>
+    <string name="image.new.empty">Entek surat goşmadyňyz</string>
+    <string name="image.new.remove">Suraty poz</string>
+    <string name="image.new.remove.description">Suraty pozmagy tassyklaň</string>
     <string name="image.new.add">Surat goş</string>
     <string name="image.new.add.gallery">Gallereýa</string>
     <string name="image.new.add.camera">Täze</string>
@@ -47,6 +50,10 @@
     <string name="image.new.size">Ölçegi: %1$s</string>
     <string name="image.new.type">Suratyň görnüşi: %1$s</string>
     <string name="image.new.upload">Ýükle</string>
+
+    <string name="image.new.error.max.count">Iň kän 20 surat ýükläp bolýar!</string>
+    <string name="image.new.error.max.size">Bir suratyň iň uly ölçegi %1$s!</string>
+    <string name="image.new.error.not.found">Surat tapylmady!</string>
 
     <string name="preferences.title">Sazlamalar</string>
     <string name="preferences.session">SessionID</string>

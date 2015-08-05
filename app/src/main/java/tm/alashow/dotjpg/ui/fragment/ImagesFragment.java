@@ -86,6 +86,7 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
         });
 
         getBaseActivity().onTitleClickedListeners.add(this);
+
     }
 
     private void initViews() {

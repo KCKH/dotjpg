@@ -6,6 +6,8 @@
 package tm.alashow.dotjpg.ui.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,9 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private int screenWidth;
 
     public ImagesAdapter(Context context, ArrayList<Image> images) {
-        if (context != null) this.mContext = context;
+        if (context != null) {
+            this.mContext = context;
+        }
         this.images = images;
         screenWidth = U.getScreenWidth(mContext);
     }
@@ -56,10 +60,37 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         int calculatedHeight = (int) (image.getHeight() * scaleFactor);
         holder.imageView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, calculatedHeight));
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentManager.with(mContext).openImageDetails(image.getImageFilename(), image);
+            }
+        });
+
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+
+                String[] actions = {mContext.getString(R.string.image_download), mContext.getString(R.string.image_copy)}; //TODO: add show gallery action if available
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+                alertDialogBuilder.setItems(actions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                U.downloadImage(mContext, image.getImageUrl());
+                                break;
+                            case 1:
+                                U.copyToClipboard(mContext, image.getImageUrl());
+                                U.showSnack(v, R.string.image_copied, U.SNACK_DEFAULT);
+                                break;
+                        }
+                    }
+                });
+
+                alertDialogBuilder.show();
+                return true;
             }
         });
 
@@ -79,6 +110,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.image) ImageView imageView;
+        @Bind(R.id.cardView) View cardView;
         @Bind(R.id.name) TextView nameView;
         @Bind(R.id.date) TextView dateView;
 

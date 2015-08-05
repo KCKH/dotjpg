@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -24,6 +25,7 @@ import butterknife.ButterKnife;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.model.NewImage;
 import tm.alashow.dotjpg.util.DotjpgUtils;
+import tm.alashow.dotjpg.util.ImageCompress;
 import tm.alashow.dotjpg.util.U;
 
 /**
@@ -66,7 +68,7 @@ public class NewImagesAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final NewImage newImage = images.get(position);
 
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.row_new_image, null);
             viewHolder = new ViewHolder(convertView);
@@ -75,17 +77,12 @@ public class NewImagesAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        DotjpgUtils.loadImage(viewHolder.imageView, Uri.fromFile(newImage.getFile()), 150, 150);
-
-        String fileSize = U.humanReadableByteCount(newImage.getSize(), true);
-        String fileType = U.getImageType(newImage.getFile());
-
-        viewHolder.sizeView.setText(String.format(context.getString(R.string.image_new_size), fileSize));
-        viewHolder.typeView.setText(String.format(context.getString(R.string.image_new_type), fileType));
+        viewHolder.setViews(context, newImage.getFile());
 
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //open image with system image viewer
                 Intent intent = new Intent();
                 intent.setDataAndType(Uri.fromFile(newImage.getFile()), "image/*");
                 intent.setAction(Intent.ACTION_VIEW);
@@ -93,12 +90,48 @@ public class NewImagesAdapter extends BaseAdapter {
             }
         });
 
+        //hide compress checkbox when file under 100kb
+        if (newImage.getOriginFile().length() < 100000) {
+            U.hideView(viewHolder.compressView);
+        } else {
+            U.showView(viewHolder.compressView);
+        }
+
         viewHolder.compressView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //we have old compressed file, don't compress file again
+                    if (newImage.isCheckedCompressed()) {
+                        newImage.setCompressed(true);
+                        viewHolder.setViews(context, newImage.getFile());
+                        return;
+                    }
 
+                    //generate new file name then execute compress task
+                    final File compressedFile = U.generateCompressFilePath();
+                    new ImageCompress(context, new ImageCompress.OnImageCompressListener() {
+                        @Override
+                        public void onSuccess(File output) {
+                            newImage.setCompressedFile(compressedFile);
+                            newImage.setCompressed(true);
+                            viewHolder.setViews(context, newImage.getFile());
+                        }
+
+                        @Override
+                        public void onError() {
+                            U.showUnknownError(viewHolder.imageView);
+                        }
+                    }, compressedFile).execute(newImage.getOriginFile());
+                } else {
+                    newImage.setCompressed(false);
+                    viewHolder.setViews(context, newImage.getFile());
+                }
             }
         });
+
+        //is that checked
+        viewHolder.compressView.setChecked(newImage.isCheckedCompressed());
 
         return convertView;
     }
@@ -111,6 +144,22 @@ public class NewImagesAdapter extends BaseAdapter {
 
         ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
+        }
+
+        /**
+         * Fill some views with data
+         *
+         * @param context context
+         * @param file    image to show about
+         */
+        public void setViews(Context context, File file) {
+            DotjpgUtils.loadImage(imageView, Uri.fromFile(file), 200, 200);
+
+            String fileSize = U.humanReadableByteCount(file.length(), true);
+            String fileType = U.getImageType(file);
+
+            sizeView.setText(String.format(context.getString(R.string.image_new_size), fileSize));
+            typeView.setText(String.format(context.getString(R.string.image_new_type), fileType));
         }
     }
 }
