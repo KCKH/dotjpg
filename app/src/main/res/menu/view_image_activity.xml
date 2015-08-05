@@ -12,5 +12,5 @@
     <item
         android:id="@+id/copy"
         ertir:showAsAction="never"
-        android:title="@string/view.image.copy"/>
+        android:title="@string/image.link.copy"/>
 </menu>

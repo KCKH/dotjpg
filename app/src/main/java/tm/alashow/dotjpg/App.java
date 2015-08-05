@@ -39,5 +39,14 @@ public class App extends Application {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
+    /**
+     * Shortcut for #applicationContext
+     *
+     * @return Context
+     */
+    public static Context c() {
+        return applicationContext;
+    }
 }
 

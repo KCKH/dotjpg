@@ -71,7 +71,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             @Override
             public boolean onLongClick(final View v) {
 
-                String[] actions = {mContext.getString(R.string.image_download), mContext.getString(R.string.image_copy)}; //TODO: add show gallery action if available
+                String[] actions = {mContext.getString(R.string.image_download), mContext.getString(R.string.image_link_copy)}; //TODO: add show gallery action if available
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
                 alertDialogBuilder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -83,7 +83,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                                 break;
                             case 1:
                                 U.copyToClipboard(mContext, image.getImageUrl());
-                                U.showSnack(v, R.string.image_copied, U.SNACK_DEFAULT);
+                                U.showSnack(v, R.string.image_link_copied, U.SNACK_DEFAULT);
                                 break;
                         }
                     }

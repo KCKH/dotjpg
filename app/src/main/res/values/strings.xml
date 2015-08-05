@@ -34,9 +34,11 @@
     <string name="image.delete">Pozmak üçin link</string>
     <string name="image.gallery">Albom</string>
     <string name="image.bb">bbcode</string>
-    <string name="image.copy">Nusgala</string>
-    <string name="image.copied">Nusgalandy</string>
+    <string name="image.link.copy">Linki nusgala</string>
+    <string name="image.link.copied">Nusgalandy</string>
     <string name="image.download">Indir</string>
+    <string name="image.download.success">Indirildi!</string>
+    <string name="image.download.failed">Suraty indirip bolmady!</string>
     <string name="image.downloading">Indirilýär..</string>
 
     <string name="image.new.title">Surat ýükle</string>
@@ -61,7 +63,5 @@
     <string name="preferences.about">Barada</string>
 
     <string name="view.image.title">Surat</string>
-    <string name="view.image.copy">Linki nusgala</string>
-    <string name="view.image.copied">Link nusgalandy</string>
 
 </resources>

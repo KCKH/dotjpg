@@ -6,7 +6,6 @@
 package tm.alashow.dotjpg.util;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -15,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -39,6 +39,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -479,28 +481,67 @@ public class U {
     }
 
     /**
-     * Downloads given url to app folder with random name
+     * Downloads given url to app base folder
      *
-     * @param context  context
      * @param imageUrl image for download
      */
-    public static void downloadImage(Context context, String imageUrl) {
-        Uri downloadUri = Uri.parse(imageUrl);
+    public static void downloadImage(final Context context, final String imageUrl) {
 
-        String extension = imageUrl;
-        int i = extension.lastIndexOf('.');
-        if (i >= 0) {
-            extension = extension.substring(i);
-        }
+//        Uri downloadUri = Uri.parse(imageUrl);
+//
+//        String extension = imageUrl;
+//        int i = extension.lastIndexOf('.');
+//        if (i >= 0) {
+//            extension = extension.substring(i);
+//        }
+//
+//        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+//        DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+//            .setDestinationInExternalPublicDir("/" + Config.LOCAL_IMAGES_FOLDER, randomFileName() + extension);
+//
+//        downloadManager.enqueue(request);
 
-        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(downloadUri);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-            .setDestinationInExternalPublicDir("/" + Config.LOCAL_IMAGES_FOLDER, randomFileName() + extension);
+        showCenteredToast(App.c(), R.string.image_downloading);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1); //get unique dotjpg filename
+                FileOutputStream out = null;
+                try {
+                    Bitmap bitmap = Picasso.with(App.c()).load(imageUrl).get();
 
-        downloadManager.enqueue(request);
-        U.showCenteredToast(context, R.string.image_downloading);
+                    out = new FileOutputStream(new File(getBaseFolder(), fileName));
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showCenteredToast(App.c(), R.string.image_download_success);
+                            U.l("Downloaded image with picasso: " + imageUrl);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showCenteredToast(App.c(), R.string.image_download_failed);
+                            U.l("Download image failed with picasso: " + imageUrl);
+                        }
+                    });
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        U.l("Download image failed with picasso: " + imageUrl);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
 

@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.squareup.picasso.Callback;
@@ -52,12 +51,14 @@ public class ViewImageActivity extends AppCompatActivity {
         try {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
+                actionBar.hide();
                 actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_transculate));
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -76,7 +77,9 @@ public class ViewImageActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
-        } else return super.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     public static class ViewImageFragment extends Fragment {
@@ -135,7 +138,7 @@ public class ViewImageActivity extends AppCompatActivity {
                 case R.id.copy:
                     if (mImageUrl != null && ! mImageUrl.equals("")) {
                         U.copyToClipboard(getActivity(), mImageUrl);
-                        Toast.makeText(getActivity(), R.string.view_image_copied, Toast.LENGTH_SHORT).show();
+                        U.showCenteredToast(getActivity(), R.string.image_link_copied);
                     }
                     return true;
             }
@@ -160,17 +163,24 @@ public class ViewImageActivity extends AppCompatActivity {
                             final ActionBar actionBar = ((ViewImageActivity) getActivity()).getSupportActionBar();
 
                             mAttacher = new PhotoViewAttacher(mImageView);
-                            if (actionBar != null) actionBar.hide();
+                            if (actionBar != null) {
+                                actionBar.hide();
+                            }
 
-                            mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                                @Override
-                                public void onViewTap(View view, float x, float y) {
-                                    if (actionBar != null) {
-                                        if (actionBar.isShowing()) actionBar.hide();
-                                        else actionBar.show();
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                                mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                                    @Override
+                                    public void onViewTap(View view, float x, float y) {
+                                        if (actionBar != null) {
+                                            if (actionBar.isShowing()) {
+                                                actionBar.hide();
+                                            } else {
+                                                actionBar.show();
+                                            }
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                     U.hideView(progressBar);

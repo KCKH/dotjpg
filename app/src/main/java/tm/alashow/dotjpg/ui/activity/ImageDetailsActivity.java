@@ -145,14 +145,14 @@ public class ImageDetailsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 U.copyToClipboard(getActivity(), textView.getText().toString());
-                U.showSnack(v, R.string.image_copied, U.SNACK_DEFAULT);
+                U.showSnack(v, R.string.image_link_copied, U.SNACK_DEFAULT);
             }
         });
 
         textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                U.showCenteredToast(getActivity(), R.string.image_copy);
+                U.showCenteredToast(getActivity(), R.string.image_link_copy);
                 return true;
             }
         });
