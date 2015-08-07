@@ -29,26 +29,39 @@ public class DateUtil {
         long time = date.getTime();
         long now = curDate.getTime();
 
-        if (time > now || time <= 0) return null;
+        if (time > now || time <= 0) {
+            return null;
+        }
 
         int dim = getTimeDistanceInMinutes(time);
-        if (dim == 0) if (getTimeDistanceInSeconds(time) < 10) timeAgo = "şuwagtjyk";
-        else timeAgo = getTimeDistanceInSeconds(time) + " sekunt öň";
-        else if (dim == 1) return "1 " + "minut öň";
-        else if (dim >= 2 && dim <= 44) timeAgo = dim + " minut öň";
-        else if (dim >= 45 && dim <= 69) timeAgo = "1 sagat öň";
-        else if (dim >= 70 && dim <= 1439)
+        if (dim == 0) {
+            if (getTimeDistanceInSeconds(time) < 10) {
+                timeAgo = "şuwagtjyk";
+            } else {
+                timeAgo = getTimeDistanceInSeconds(time) + " sekunt öň";
+            }
+        } else if (dim == 1) {
+            return "1 " + "minut öň";
+        } else if (dim >= 2 && dim <= 44) {
+            timeAgo = dim + " minut öň";
+        } else if (dim >= 45 && dim <= 69) {
+            timeAgo = "1 sagat öň";
+        } else if (dim >= 70 && dim <= 1439) {
             timeAgo = (Math.round(dim / 60)) + " sagat öň" + ", " + hourMinuteFormat.format(date.getTime());
-        else if (dim >= 1440 && dim <= 2519)
+        } else if (dim >= 1440 && dim <= 2519) {
             timeAgo = "Düýn" + ", " + hourMinuteFormat.format(date.getTime());
+        }
 //        else if (dim >= 2520 && dim <= 43199)
 //            timeAgo = (Math.round(dim / 1440)) + " gün öň" + ", " + hourMinuteFormat.format(date.getTime());
 //        else if (dim >= 43200 && dim <= 86399)
 //            timeAgo = "1 aý öň, " + getHumanDateWithoutYear(time);
 //        else if (dim >= 86400 && dim <= 525599)
 //            timeAgo = (Math.round(dim / 43200)) + " aý öň, " + getHumanDateWithoutYear(time);
-        else if (dim >= 2520 && dim <= 525599) timeAgo = getHumanDateWithoutYear(time);
-        else timeAgo = getHumanDate(time);
+        else if (dim >= 2520 && dim <= 525599) {
+            timeAgo = getHumanDateWithoutYear(time);
+        } else {
+            timeAgo = getHumanDate(time);
+        }
         return timeAgo;
     }
 
@@ -94,7 +107,9 @@ public class DateUtil {
      * @return short month name
      */
     private static String getShortMonthName(int month) {
-        if (month < 0 || month > 11) return "null";
+        if (month < 0 || month > 11) {
+            return "null";
+        }
         String[] months = {"Ýan", "Few", "Mart", "Apr", "Maý", "Iýun", "Iýul", "Awg", "Sen", "Okt", "Noý", "Dek"};
         return months[month];
     }

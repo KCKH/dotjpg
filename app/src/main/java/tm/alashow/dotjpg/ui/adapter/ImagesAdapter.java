@@ -109,8 +109,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.image) ImageView imageView;
         @Bind(R.id.cardView) View cardView;
+        @Bind(R.id.image) ImageView imageView;
         @Bind(R.id.name) TextView nameView;
         @Bind(R.id.date) TextView dateView;
 

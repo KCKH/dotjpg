@@ -30,7 +30,9 @@ public class PreferencesManager {
 
     // Lazy Initialization (If required then only)
     public static PreferencesManager getInstance(Context context) {
-        if (context == null) throw new IllegalStateException("Context must not be null");
+        if (context == null) {
+            throw new IllegalStateException("Context must not be null");
+        }
         if (instance == null) {
             // Thread Safe. Might be costly operation in some case
             synchronized (PreferencesManager.class) {

@@ -48,8 +48,12 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
 
     private boolean loadingMore = false;
     private boolean stopLoadMore = false;
-
     private int pagination = 0;
+
+    public static final int TYPE_NEW = 0;
+    public static final int TYPE_REFRESH = 1;
+    public static final int TYPE_PAGINATION = 2;
+
 
     @Bind(R.id.refresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.recyclerView) EndlessRecyclerView recyclerView;
@@ -82,11 +86,10 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
         mHandler = new Handler();
         initViews();
 
-        loadImages(0, new OnImagesLoadedListener(0) {
+        loadImages(TYPE_NEW, new OnImagesLoadedListener(TYPE_NEW) {
         });
 
         getBaseActivity().onTitleClickedListeners.add(this);
-
     }
 
     private void initViews() {
@@ -97,7 +100,8 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
             @Override
             public void onRefresh() {
                 pagination = 0;
-                loadImages(1, new OnImagesLoadedListener(1) {
+                stopLoadMore = false;
+                loadImages(TYPE_REFRESH, new OnImagesLoadedListener(TYPE_REFRESH) {
                 });
             }
         });
@@ -137,13 +141,13 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
             @Override
             public void onStart() {
                 switch (type) {
-                    case 0:
+                    case TYPE_NEW:
                         U.showView(progressBar);
                         break;
-                    case 1:
+                    case TYPE_REFRESH:
                         refreshLayout.setRefreshing(true);
                         break;
-                    case 2:
+                    case TYPE_PAGINATION:
                         loadingMore = true;
                         break;
                 }
@@ -152,8 +156,9 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if (! response.getBoolean("success"))
+                    if (! response.getBoolean("success")) {
                         throw new IllegalStateException("Server returned error. Error: " + response.getString("error_msg"));
+                    }
 
                     ArrayList<Image> newImages = new ArrayList<>();
                     JSONArray imagesJson = response.getJSONArray("data");
@@ -193,13 +198,13 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
             @Override
             public void onFinish() {
                 switch (type) {
-                    case 0:
+                    case TYPE_NEW:
                         U.hideView(progressBar);
                         break;
-                    case 1:
+                    case TYPE_REFRESH:
                         refreshLayout.setRefreshing(false);
                         break;
-                    case 2:
+                    case TYPE_PAGINATION:
                         loadingMore = false;
                         stopLoadMore = true;
                         mHandler.postDelayed(new Runnable() {
@@ -222,26 +227,40 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
         }
 
         void onSuccess(JSONObject response, ArrayList<Image> newImages) {
-            images = newImages;
-            setImagesAdapter();
+            if (type == TYPE_PAGINATION) {
+                int oldSize = images.size();
+                images.addAll(newImages);
+                imagesAdapter.notifyItemRangeInserted(oldSize, newImages.size());
+            } else {
+                images = newImages;
+                setImagesAdapter();
+            }
         }
 
         void onFail(Throwable e) {
             U.showNetworkError(getView());
 
             //when refreshing with empty list and first loading
-            if (type == 1 && images.isEmpty() || type == 0) U.showView(retryView);
+            if (type == TYPE_REFRESH && images.isEmpty() || type == TYPE_NEW) {
+                U.showView(retryView);
+            }
 
-            if (Config.DEBUG) e.printStackTrace();
+            if (Config.DEBUG) {
+                e.printStackTrace();
+            }
         }
 
         void onException(Exception e) {
             U.showError(getView(), R.string.exception);
 
             //when refreshing with empty list and first loading
-            if (type == 1 && images.isEmpty() || type == 0) U.showView(retryView);
+            if (type == TYPE_REFRESH && images.isEmpty() || type == TYPE_NEW) {
+                U.showView(retryView);
+            }
 
-            if (Config.DEBUG) e.printStackTrace();
+            if (Config.DEBUG) {
+                e.printStackTrace();
+            }
         }
 
         /**
@@ -268,13 +287,7 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
 
     @Override
     public void loadNextPage() {
-        loadImages(2, new OnImagesLoadedListener(2) {
-            @Override
-            public void onSuccess(JSONObject response, ArrayList<Image> newImages) {
-                int oldSize = images.size();
-                images.addAll(newImages);
-                imagesAdapter.notifyItemRangeInserted(oldSize, newImages.size());
-            }
+        loadImages(TYPE_PAGINATION, new OnImagesLoadedListener(TYPE_PAGINATION) {
 
             @Override
             void onEmptyResult(JSONObject response) {

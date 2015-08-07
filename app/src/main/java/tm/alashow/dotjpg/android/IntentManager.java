@@ -63,11 +63,13 @@ public class IntentManager {
 
     public void openImageDetails(String imageFilename, Image image) {
         Intent intent = new Intent(mContext, ImageDetailsActivity.class);
-        if (imageFilename != null)
+        if (imageFilename != null) {
             intent.putExtra(Config.EXTRA_IMAGE_FILENAME, imageFilename);
+        }
 
-        if (image != null)
+        if (image != null) {
             intent.putExtra(Config.EXTRA_IMAGE, image);
+        }
 
         open(intent);
     }

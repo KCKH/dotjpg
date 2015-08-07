@@ -74,8 +74,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onDrawerClosed(View arg0) {
                 shouldGoInvisible = false;
-                if (mOldTitle != null) mToolbar.setTitle(mOldTitle);
-                if (mOldSubtitle != null) mToolbar.setSubtitle(mOldSubtitle);
+                if (mOldTitle != null) {
+                    mToolbar.setTitle(mOldTitle);
+                }
+                if (mOldSubtitle != null) {
+                    mToolbar.setSubtitle(mOldSubtitle);
+                }
                 invalidateOptionsMenu();
             }
 
@@ -93,8 +97,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) mDrawerLayout.closeDrawers();
-                else onBackPressed();
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    mDrawerLayout.closeDrawers();
+                } else {
+                    onBackPressed();
+                }
             }
         });
 
@@ -123,7 +130,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void initAddImageButton() {
@@ -157,11 +166,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) return true;
-        else switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        } else {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    finish();
+                    return true;
+            }
         }
         return false;
     }
@@ -184,12 +196,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void onNavigationClicked(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.main:
-                if (! getActivityTag().equals(Config.ACTIVITY_TAG_MAIN))
+                if (! getActivityTag().equals(Config.ACTIVITY_TAG_MAIN)) {
                     IntentManager.with(this).openMain();
+                }
                 break;
             case R.id.preferences:
-                if (! getActivityTag().equals(Config.ACTIVITY_TAG_PREFERENCES))
+                if (! getActivityTag().equals(Config.ACTIVITY_TAG_PREFERENCES)) {
                     IntentManager.with(this).openPreferences();
+                }
                 break;
         }
     }
@@ -201,13 +215,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void hideActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) return;
+        if (actionBar == null) {
+            return;
+        }
         actionBar.hide();
     }
 
     private void showActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) return;
+        if (actionBar == null) {
+            return;
+        }
         actionBar.show();
     }
 
@@ -218,13 +236,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (mDrawerToggle != null) mDrawerToggle.syncState();
+        if (mDrawerToggle != null) {
+            mDrawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (mDrawerToggle != null) mDrawerToggle.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null) {
+            mDrawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
 

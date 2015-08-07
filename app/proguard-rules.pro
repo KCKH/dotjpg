@@ -9,12 +9,6 @@
 
 -dontwarn com.squareup.okhttp.**
 
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-    **[] $VALUES;
-    public *;
-}
-
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
@@ -36,12 +30,4 @@
 -dontwarn android.support.design.**
 -keep public class * extends android.support.design.widget.CoordinatorLayout$Behavior {
     public <init>(android.content.Context, android.util.AttributeSet);
-}
-
--keepattributes JavascriptInterface
-
--keep public class tm.veriloft.ertir.ui.BlogViewBodyFragment$WebAppInterface
--keep public class * implements tm.veriloft.ertir.ui.BlogViewBodyFragment$WebAppInterface
--keepclassmembers class tm.veriloft.ertir.ui.BlogViewBodyFragment$WebAppInterface {
-    <methods>;
 }

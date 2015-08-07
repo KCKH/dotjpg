@@ -50,8 +50,9 @@ public class ImageDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT > 19)
+        if (Build.VERSION.SDK_INT > 19) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         mCoordinatorLayout.setStatusBarBackgroundColor(getResources().getColor(android.R.color.transparent));
 
         init(getIntent());
@@ -64,8 +65,12 @@ public class ImageDetailsActivity extends BaseActivity {
             mImage = (Image) intent.getSerializableExtra(Config.EXTRA_IMAGE);
             if (mImage != null || U.getTrimmedString(mImageFilename).length() > 0) {
                 initViews();
-            } else finish();
-        } else finish();
+            } else {
+                finish();
+            }
+        } else {
+            finish();
+        }
     }
 
     private void initViews() {
@@ -105,10 +110,12 @@ public class ImageDetailsActivity extends BaseActivity {
         //Adding info views
         addInfoView(R.string.image_direct, getImageUrl(), true);
         if (imageObject()) {
-            if (mImage.hasDeleteToken())
+            if (mImage.hasDeleteToken()) {
                 addInfoView(R.string.image_delete, DotjpgUtils.getImageDeleteUrl(mImage.getDeleteToken()), true);
-            if (mImage.hasGalleryId())
+            }
+            if (mImage.hasGalleryId()) {
                 addInfoView(R.string.image_gallery, DotjpgUtils.getImageGalleryUrl(mImage.getGalleryId()), true);
+            }
         }
 
         addInfoView(R.string.image_page, DotjpgUtils.getImagePageUrl(DotjpgUtils.trimImageExtension(mImageFilename)), true);
