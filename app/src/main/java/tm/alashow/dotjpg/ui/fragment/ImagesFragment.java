@@ -40,6 +40,7 @@ import tm.alashow.dotjpg.util.U;
 public class ImagesFragment extends BaseFragment implements OnTitleClickedListener, EndlessRecyclerView.Pager {
 
     private String mImagesType;
+    private String mGalleryId;
 
     private Handler mHandler;
 
@@ -54,16 +55,22 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
     public static final int TYPE_REFRESH = 1;
     public static final int TYPE_PAGINATION = 2;
 
-
     @Bind(R.id.refresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.recyclerView) EndlessRecyclerView recyclerView;
     @Bind(R.id.progress) ProgressWheel progressBar;
     @Bind(R.id.retry) Button retryView;
 
     public static ImagesFragment createInstance(String imagesType) {
+        return createInstance(imagesType, null);
+    }
+
+    public static ImagesFragment createInstance(String imagesType, String galleryId) {
         ImagesFragment imagesFragment = new ImagesFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Config.EXTRA_IMAGES_TYPE, imagesType);
+        if (galleryId != null) {
+            bundle.putString(Config.EXTRA_GALLERY_ID, galleryId);
+        }
         imagesFragment.setArguments(bundle);
         return imagesFragment;
     }
@@ -76,6 +83,9 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             this.mImagesType = getArguments().getString(Config.EXTRA_IMAGES_TYPE, Config.API_ACTION_GET_SPECIAL);
+            if (mImagesType.equals(Config.API_ACTION_GET_GALLERY)) {
+                this.mGalleryId = getArguments().getString(Config.EXTRA_GALLERY_ID, null);
+            }
         }
     }
 
@@ -134,6 +144,8 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
 
         if (mImagesType.equals(Config.API_ACTION_GET_ALL_MY)) {
             requestParams.put(Config.API_SESSION_ID_PARAM, getBaseActivity().preferencesManager.getSessionId());
+        } else if (mImagesType.equals(Config.API_ACTION_GET_GALLERY) && mGalleryId != null) {
+            requestParams.put(Config.API_GALLERY_ID_PARAM, mGalleryId);
         }
 
         ApiClient.get(Config.API, requestParams, new JsonHttpResponseHandler() {

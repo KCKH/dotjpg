@@ -7,6 +7,7 @@ package tm.alashow.dotjpg.ui.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,10 +56,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     public void onBindViewHolder(final ImagesAdapter.ImageViewHolder holder, int position) {
         final Image image = images.get(position);
 
-        DotjpgUtils.loadImage(holder.imageView, image.getImageUrl());
+        DotjpgUtils.loadImage(holder.imageView, Uri.parse(image.getImageUrl()));
+
         float scaleFactor = ((float) screenWidth / image.getWidth());
         int calculatedHeight = (int) (image.getHeight() * scaleFactor);
         holder.imageView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, calculatedHeight));
+
+        holder.nameView.setText(image.getImageId());
+        holder.dateView.setText(DateUtil.getTimeAgo(new Date(image.getTimestamp())));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,19 +76,28 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             @Override
             public boolean onLongClick(final View v) {
 
-                String[] actions = {mContext.getString(R.string.image_download), mContext.getString(R.string.image_link_copy)}; //TODO: add show gallery action if available
+                ArrayList<String> actions = new ArrayList<>();
+                actions.add(mContext.getString(R.string.image_download));
+                actions.add(mContext.getString(R.string.image_link_copy));
+
+                if (image.hasGalleryId()) {
+                    actions.add(mContext.getString(R.string.image_gallery));
+                }
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-                alertDialogBuilder.setItems(actions, new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setItems(actions.toArray(new String[actions.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                U.downloadImage(mContext, image.getImageUrl());
+                                U.downloadImage(mContext, image.getImageUrl(), holder.cardView);
                                 break;
                             case 1:
                                 U.copyToClipboard(mContext, image.getImageUrl());
                                 U.showSnack(v, R.string.image_link_copied, U.SNACK_DEFAULT);
+                                break;
+                            case 2:
+                                IntentManager.with(mContext).openGallery(image.getGalleryId());
                                 break;
                         }
                     }
@@ -93,9 +107,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                 return true;
             }
         });
-
-        holder.nameView.setText(image.getImageId());
-        holder.dateView.setText(DateUtil.getTimeAgo(new Date(image.getTimestamp())));
     }
 
     @Override

@@ -38,16 +38,15 @@ import tm.alashow.dotjpg.util.U;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
-    public PreferencesManager preferencesManager;
-
     private Handler mHandler;
 
     private boolean shouldGoInvisible;
     private String mOldTitle;
     private String mOldSubtitle;
 
+    public Toolbar mToolbar;
+    public PreferencesManager preferencesManager;
     public HashSet<OnTitleClickedListener> onTitleClickedListeners = new HashSet<>();
 
     @Bind(R.id.drawer) DrawerLayout mDrawerLayout;
@@ -64,6 +63,43 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         initToolbar();
         initAddImageButton();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        for(int i = 0; i < menu.size(); i++)
+            menu.getItem(i).setVisible(! shouldGoInvisible);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        } else {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    finish();
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Close MenuDrawer if opened
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void initToolbar() {
@@ -151,43 +187,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        for(int i = 0; i < menu.size(); i++)
-            menu.getItem(i).setVisible(! shouldGoInvisible);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        } else {
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    finish();
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        //Close MenuDrawer if opened
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawers();
-            return;
-        }
-        super.onBackPressed();
-    }
-
     /**
      * Starts activity if activity tag handled, else close menu
      *
@@ -198,6 +197,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             case R.id.main:
                 if (! getActivityTag().equals(Config.ACTIVITY_TAG_MAIN)) {
                     IntentManager.with(this).openMain();
+                }
+                break;
+            case R.id.my:
+                if (! getActivityTag().equals(Config.ACTIVITY_TAG_IMAGES)) {
+                    IntentManager.with(this).openMyImages();
                 }
                 break;
             case R.id.preferences:

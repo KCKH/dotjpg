@@ -7,16 +7,20 @@ package tm.alashow.dotjpg.android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.model.Image;
 import tm.alashow.dotjpg.ui.activity.ImageDetailsActivity;
+import tm.alashow.dotjpg.ui.activity.ImagesActivity;
 import tm.alashow.dotjpg.ui.activity.MainActivity;
 import tm.alashow.dotjpg.ui.activity.NewImageActivity;
 import tm.alashow.dotjpg.ui.activity.PreferencesActivity;
 import tm.alashow.dotjpg.ui.activity.ViewImageActivity;
+import tm.alashow.dotjpg.util.U;
 
 /**
  * Intent Manager for starting activities
@@ -76,6 +80,30 @@ public class IntentManager {
 
     public void openPreferences() {
         Intent intent = new Intent(mContext, PreferencesActivity.class);
+        open(intent);
+    }
+
+    public void openMyImages() {
+        Intent intent = new Intent(mContext, ImagesActivity.class);
+        intent.putExtra(Config.EXTRA_IMAGES_TYPE, Config.API_ACTION_GET_ALL_MY);
+        open(intent);
+    }
+
+    public void openGallery(String galleryId) {
+        if (galleryId == null || U.getTrimmedString(galleryId).length() < 1) {
+            return;
+        }
+
+        Intent intent = new Intent(mContext, ImagesActivity.class);
+        intent.putExtra(Config.EXTRA_IMAGES_TYPE, Config.API_ACTION_GET_GALLERY);
+        intent.putExtra(Config.EXTRA_GALLERY_ID, galleryId);
+        open(intent);
+    }
+
+    public void openLocalImage(File file) {
+        Intent intent = new Intent();
+        intent.setDataAndType(Uri.fromFile(file), "image/*");
+        intent.setAction(Intent.ACTION_VIEW);
         open(intent);
     }
 

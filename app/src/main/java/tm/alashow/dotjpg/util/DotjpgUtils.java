@@ -8,7 +8,9 @@ package tm.alashow.dotjpg.util;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import tm.alashow.dotjpg.Config;
 
@@ -17,18 +19,12 @@ import tm.alashow.dotjpg.Config;
  */
 public class DotjpgUtils {
 
-    public static void loadImage(ImageView imageView, String imageUrl) {
-        loadImage(imageView, Uri.parse(imageUrl), 1500, 1100);
-    }
-
-    public static void loadImage(ImageView imageView, Uri image, int maxWidth, int maxHeight) {
-
-        int size = (int) Math.ceil(Math.sqrt(maxWidth * maxHeight));
-        Picasso.with(imageView.getContext())
+    public static void loadImage(ImageView imageView, Uri image) {
+        Glide.with(imageView.getContext())
             .load(image)
-            .transform(new BitmapTransform(maxWidth, maxHeight))
-            .resize(size, size)
-            .centerInside()
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .priority(Priority.HIGH)
             .placeholder(U.imagePlaceholder())
             .into(imageView);
     }

@@ -38,6 +38,7 @@
     <string name="image.link.copied">Nusgalandy</string>
     <string name="image.download">Indir</string>
     <string name="image.download.success">Indirildi!</string>
+    <string name="image.download.success.view">Gör</string>
     <string name="image.download.failed">Suraty indirip bolmady!</string>
     <string name="image.downloading">Indirilýär..</string>
 
@@ -58,7 +59,7 @@
     <string name="image.new.error.not.found">Surat tapylmady!</string>
 
     <string name="preferences.title">Sazlamalar</string>
-    <string name="preferences.session">SessionID</string>
+    <string name="preferences.session">Session ID</string>
     <string name="preferences.session.summary">Ýüklän suratlaryňyzy görmek we pozmak üçin açaryňyz</string>
     <string name="preferences.about">Barada</string>
 

@@ -24,9 +24,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.pnikosis.materialishprogress.ProgressWheel;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -152,48 +156,54 @@ public class ViewImageActivity extends AppCompatActivity {
             U.hideView(retryButton);
             U.showView(progressBar);
 
-            Picasso.with(getActivity()).load(mImageUrl).into(mImageView, new Callback() {
-                @Override
-                public void onSuccess() {
-                    //Attaching or updating photo view on success downloading image
-                    if (mAttacher != null) {
-                        mAttacher.update();
-                    } else {
-                        if (getActivity() != null) {
-                            final ActionBar actionBar = ((ViewImageActivity) getActivity()).getSupportActionBar();
+            Glide.with(getActivity()).load(mImageUrl)
+                .priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        U.showNetworkError(retryButton);
+                        U.hideView(progressBar);
+                        U.showView(retryButton);
+                        return false;
+                    }
 
-                            mAttacher = new PhotoViewAttacher(mImageView);
-                            if (actionBar != null) {
-                                actionBar.hide();
-                            }
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        //Attaching or updating photo view on success downloading image
+                        if (mAttacher != null) {
+                            mAttacher.update();
+                        } else {
+                            if (getActivity() != null) {
+                                final ActionBar actionBar = ((ViewImageActivity) getActivity()).getSupportActionBar();
 
-                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                                mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                                    @Override
-                                    public void onViewTap(View view, float x, float y) {
-                                        if (actionBar != null) {
-                                            if (actionBar.isShowing()) {
-                                                actionBar.hide();
-                                            } else {
-                                                actionBar.show();
+                                mAttacher = new PhotoViewAttacher(mImageView);
+                                if (actionBar != null) {
+                                    actionBar.hide();
+                                }
+
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                                    mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                                        @Override
+                                        public void onViewTap(View view, float x, float y) {
+                                            if (actionBar != null) {
+                                                if (actionBar.isShowing()) {
+                                                    actionBar.hide();
+                                                } else {
+                                                    actionBar.show();
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
+                        U.hideView(progressBar);
+                        U.hideView(retryButton);
+                        return false;
                     }
-                    U.hideView(progressBar);
-                    U.hideView(retryButton);
-                }
-
-                @Override
-                public void onError() {
-                    U.showNetworkError(retryButton);
-                    U.hideView(progressBar);
-                    U.showView(retryButton);
-                }
-            });
+                })
+                .into(mImageView);
         }
     }
 

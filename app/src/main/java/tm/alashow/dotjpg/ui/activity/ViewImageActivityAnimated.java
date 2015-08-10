@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -66,7 +67,7 @@ public class ViewImageActivityAnimated extends Activity {
         final int thumbnailHeight = bundle.getInt(Config.EXTRA_HEIGHT);
         mOriginalOrientation = bundle.getInt(Config.EXTRA_ORIENTATION);
 
-        DotjpgUtils.loadImage(mImageView, imageUrl);
+        DotjpgUtils.loadImage(mImageView, Uri.parse(imageUrl));
         new PhotoViewAttacher(mImageView);
 
         mBackground = new ColorDrawable(Color.BLACK);

@@ -6,7 +6,6 @@
 package tm.alashow.dotjpg.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import tm.alashow.dotjpg.R;
+import tm.alashow.dotjpg.android.IntentManager;
 import tm.alashow.dotjpg.model.NewImage;
 import tm.alashow.dotjpg.util.DotjpgUtils;
 import tm.alashow.dotjpg.util.ImageCompress;
@@ -83,10 +83,7 @@ public class NewImagesAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //open image with system image viewer
-                Intent intent = new Intent();
-                intent.setDataAndType(Uri.fromFile(newImage.getFile()), "image/*");
-                intent.setAction(Intent.ACTION_VIEW);
-                context.startActivity(intent);
+                IntentManager.with(context).openLocalImage(newImage.getFile());
             }
         });
 
@@ -153,7 +150,7 @@ public class NewImagesAdapter extends BaseAdapter {
          * @param file    image to show about
          */
         public void setViews(Context context, File file) {
-            DotjpgUtils.loadImage(imageView, Uri.fromFile(file), 200, 200);
+            DotjpgUtils.loadImage(imageView, Uri.fromFile(file));
 
             String fileSize = U.humanReadableByteCount(file.length(), true);
             String fileType = U.getImageType(file);

@@ -6,9 +6,12 @@
 package tm.alashow.dotjpg.ui.fragment;
 
 import android.os.Bundle;
+import android.preference.Preference;
+import android.support.v7.app.AlertDialog;
 
 import tm.alashow.dotjpg.BuildConfig;
 import tm.alashow.dotjpg.R;
+import tm.alashow.dotjpg.android.PreferencesManager;
 
 
 /**
@@ -22,5 +25,16 @@ public class PreferencesFragment extends android.support.v4.preference.Preferenc
         addPreferencesFromResource(R.xml.preferences);
 
         findPreference("about").setTitle("App Android v" + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
+
+        findPreference("session_id").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.preferences_session)
+                    .setMessage(getString(R.string.preferences_session_summary) + ":\n\n" + PreferencesManager.getInstance(getActivity()).getSessionId())
+                    .show();
+                return true;
+            }
+        });
     }
 }

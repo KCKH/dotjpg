@@ -40,7 +40,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,6 +55,7 @@ import java.security.SecureRandom;
 import tm.alashow.dotjpg.App;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
+import tm.alashow.dotjpg.android.IntentManager;
 
 public class U {
     public static int RESULT_GALLERY = 0xea;
@@ -480,13 +483,17 @@ public class U {
         return size.x;
     }
 
+    public static void downloadImage(final Context context, final String imageUrl) {
+        downloadImage(context, imageUrl, null);
+    }
+
     /**
      * Downloads given url to app base folder
      *
      * @param imageUrl image for download
+     * @param view     view for snackbar
      */
-    public static void downloadImage(final Context context, final String imageUrl) {
-
+    public static void downloadImage(final Context context, final String imageUrl, final View view) {
 //        Uri downloadUri = Uri.parse(imageUrl);
 //
 //        String extension = imageUrl;
@@ -502,32 +509,62 @@ public class U {
 //            .setDestinationInExternalPublicDir("/" + Config.LOCAL_IMAGES_FOLDER, randomFileName() + extension);
 //
 //        downloadManager.enqueue(request);
+        if (view != null && view.isShown()) {
+            showSnack(view, R.string.image_downloading, SNACK_DEFAULT);
+        } else {
+            showCenteredToast(App.c(), R.string.image_downloading);
+        }
 
-        showCenteredToast(App.c(), R.string.image_downloading);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1); //get unique dotjpg filename
+                final File file = new File(getBaseFolder(), fileName);
                 FileOutputStream out = null;
-                try {
-                    Bitmap bitmap = Picasso.with(App.c()).load(imageUrl).get();
 
-                    out = new FileOutputStream(new File(getBaseFolder(), fileName));
+                try {
+                    Bitmap bitmap = Glide.with(App.c()).load(imageUrl)
+                        .asBitmap()
+                        .priority(Priority.HIGH)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(- 1, - 1) //full size
+                        .get();
+
+                    out = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showCenteredToast(App.c(), R.string.image_download_success);
-                            U.l("Downloaded image with picasso: " + imageUrl);
+                            if (view != null && view.isShown()) {
+                                Snackbar snackbar = showSnack(view, R.string.image_download_success, SNACK_SUCCESS);
+                                //Open image
+                                if (file.exists()) {
+                                    snackbar.setAction(R.string.image_download_success_view, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            IntentManager.with(context).openLocalImage(file);
+                                        }
+                                    });
+                                }
+                            } else {
+                                showCenteredToast(App.c(), R.string.image_download_success);
+                            }
+                            U.l("Downloaded image with glide: " + imageUrl);
                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
+
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showCenteredToast(App.c(), R.string.image_download_failed);
-                            U.l("Download image failed with picasso: " + imageUrl);
+                            if (view != null && view.isShown()) {
+                                showSnack(view, R.string.image_download_failed, SNACK_ERROR);
+                            } else {
+                                showCenteredToast(App.c(), R.string.image_download_failed);
+                            }
+                            U.l("Download image failed with glide: " + imageUrl);
                         }
                     });
                 } finally {
@@ -536,14 +573,13 @@ public class U {
                             out.close();
                         }
                     } catch (IOException e) {
-                        U.l("Download image failed with picasso: " + imageUrl);
+                        U.l("Download image failed with glide: " + imageUrl);
                         e.printStackTrace();
                     }
                 }
             }
         }).start();
     }
-
 
     /**
      * Get type of image with reading mimeType of image

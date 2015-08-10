@@ -46,6 +46,7 @@ public class Config {
 
     public static String API_PAGE_PARAM = "page";
     public static String API_SESSION_ID_PARAM = "session_id";
+    public static String API_GALLERY_ID_PARAM = "gallery_id";
 
     public static String API_CONTROLLER_PARAM = "controller";
     public static String API_CONTROLLER_IMAGE = "image";

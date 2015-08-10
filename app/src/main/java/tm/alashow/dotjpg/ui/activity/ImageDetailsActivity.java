@@ -83,7 +83,7 @@ public class ImageDetailsActivity extends BaseActivity {
             }
         });
 
-        DotjpgUtils.loadImage(imageView, getImageUrl());
+        DotjpgUtils.loadImage(imageView, Uri.parse(getImageUrl()));
 
         shareView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +99,7 @@ public class ImageDetailsActivity extends BaseActivity {
         downloadView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                U.downloadImage(getActivity(), getImageUrl());
+                U.downloadImage(getActivity(), getImageUrl(), v);
             }
         });
 
