@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015  Alashov Berkeli
+  ~ It is licensed under GNU GPL v. 2 or later. For full terms see the file LICENSE.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <tm.alashow.dotjpg.ui.view.CircleProgress
+        android:id="@+id/circleProgress"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/circleProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progress="0"/>
+
+    <TextView
+        android:id="@+id/progressTextPercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/progressBar"
+        android:layout_below="@+id/progressBar"
+        android:textSize="@dimen/text_medium"
+        android:textColor="@color/text_color"
+        android:text="0%"/>
+
+    <TextView
+        android:id="@+id/progressTextBytes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/progressBar"
+        android:layout_below="@+id/progressBar"
+        android:textSize="@dimen/text_medium"
+        android:textColor="@color/text_color"
+        android:text="0/0"/>
+
+</RelativeLayout>

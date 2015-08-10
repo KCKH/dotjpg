@@ -57,4 +57,10 @@
         <item name="android:background">@drawable/button_rounded_background_danger</item>
     </style>
 
+    <declare-styleable name="CircleProgress">
+        <attr name="color1" format="reference|color"/>
+        <attr name="color2" format="reference|color"/>
+        <attr name="color3" format="reference|color"/>
+    </declare-styleable>
+
 </resources>

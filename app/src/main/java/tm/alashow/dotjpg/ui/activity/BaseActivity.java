@@ -204,6 +204,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                     IntentManager.with(this).openMyImages();
                 }
                 break;
+            case R.id.addImage:
+                if (! getActivityTag().equals(Config.ACTIVITY_TAG_IMAGE_NEW)) {
+                    IntentManager.with(getActivity()).newImage();
+                }
+                break;
             case R.id.preferences:
                 if (! getActivityTag().equals(Config.ACTIVITY_TAG_PREFERENCES)) {
                     IntentManager.with(this).openPreferences();

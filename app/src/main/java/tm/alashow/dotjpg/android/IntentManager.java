@@ -5,6 +5,7 @@
 
 package tm.alashow.dotjpg.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -90,6 +91,10 @@ public class IntentManager {
     }
 
     public void openGallery(String galleryId) {
+        openGallery(galleryId, false);
+    }
+
+    public void openGallery(String galleryId, boolean clearTop) {
         if (galleryId == null || U.getTrimmedString(galleryId).length() < 1) {
             return;
         }
@@ -97,7 +102,14 @@ public class IntentManager {
         Intent intent = new Intent(mContext, ImagesActivity.class);
         intent.putExtra(Config.EXTRA_IMAGES_TYPE, Config.API_ACTION_GET_GALLERY);
         intent.putExtra(Config.EXTRA_GALLERY_ID, galleryId);
+        if (clearTop) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        }
         open(intent);
+        if (clearTop) {
+            ((Activity) mContext).finish();
+        }
     }
 
     public void openLocalImage(File file) {

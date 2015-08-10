@@ -21,7 +21,7 @@ public class Config {
     //Activity tags
     public static String ACTIVITY_TAG_MAIN = "main";
     public static String ACTIVITY_TAG_IMAGE_DETAILS = "main";
-    public static String ACTIVITY_TAG_IMAGE_NEW = "main";
+    public static String ACTIVITY_TAG_IMAGE_NEW = "newImage";
     public static String ACTIVITY_TAG_IMAGES = "images_";
     public static String ACTIVITY_TAG_PREFERENCES = "preferences";
 

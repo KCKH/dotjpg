@@ -305,7 +305,8 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
             void onEmptyResult(JSONObject response) {
                 //reached end. stop load more
                 stopLoadMore = true;
-                U.showError(getView(), R.string.images_reached_end);
+                recyclerView.setRefreshing(false);
+
             }
         });
     }

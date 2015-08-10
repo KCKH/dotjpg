@@ -26,7 +26,6 @@ public class MainActivity extends BaseActivity {
         U.attachFragment(this, ImagesFragment.createInstance(Config.API_ACTION_GET_SPECIAL));
     }
 
-
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_fragment;

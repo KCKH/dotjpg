@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,17 +23,29 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
+import tm.alashow.dotjpg.android.IntentManager;
 import tm.alashow.dotjpg.model.ListItem;
 import tm.alashow.dotjpg.model.NewImage;
 import tm.alashow.dotjpg.ui.adapter.NewImagesAdapter;
+import tm.alashow.dotjpg.ui.view.CircleProgress;
+import tm.alashow.dotjpg.util.ApiClient;
 import tm.alashow.dotjpg.util.U;
 
 /**
@@ -53,6 +66,40 @@ public class NewImageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initViews();
+
+        //Receiving data
+        Intent intent = getIntent();
+        String intentAction = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(intentAction) || Intent.ACTION_SEND_MULTIPLE.equals(intentAction) && type != null) {
+            if (type.startsWith("image/")) {
+                if (Intent.ACTION_SEND.equals(intentAction)) {
+                    Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    if (imageUri != null) {
+                        addImage(imageUri);
+                    }
+                } else if (Intent.ACTION_SEND_MULTIPLE.equals(intentAction)) {
+                    ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                    for(int i = 0; i < imageUris.size(); i++) {
+                        if (isReachedMaxCount()) {
+                            U.showError(emptyView, R.string.image_new_error_max_count);
+                            break;
+                        }
+                        addImage(imageUris.get(i));
+                    }
+                }
+            }
+        }
+
+        //if list is empty, show chooser
+        if (images.size() == 0) {
+            showAddImageDialog();
+        }
+    }
+
+    private void initViews() {
         newImagesAdapter = new NewImagesAdapter(this, images);
         mListView.setAdapter(newImagesAdapter);
 
@@ -91,42 +138,132 @@ public class NewImageActivity extends BaseActivity {
         uploadView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (images.isEmpty()) {
-                    shakeIt(emptyView);
-                } else { //upload 'em
-
-                }
+                uploadImages();
             }
         });
+    }
 
-        //Receiving data
-        Intent intent = getIntent();
-        String intentAction = intent.getAction();
-        String type = intent.getType();
-
-        if (Intent.ACTION_SEND.equals(intentAction) || Intent.ACTION_SEND_MULTIPLE.equals(intentAction) && type != null) {
-            if (type.startsWith("image/")) {
-                if (Intent.ACTION_SEND.equals(intentAction)) {
-                    Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                    if (imageUri != null) {
-                        addImage(imageUri);
-                    }
-                } else if (Intent.ACTION_SEND_MULTIPLE.equals(intentAction)) {
-                    ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                    for(int i = 0; i < imageUris.size(); i++) {
-                        if (isReachedMaxCount()) {
-                            U.showError(emptyView, R.string.image_new_error_max_count);
-                            break;
-                        }
-                        addImage(imageUris.get(i));
-                    }
-                }
+    private void uploadImages() {
+        for(int i = 0; i < images.size(); i++) {
+            NewImage newImage = images.get(i);
+            if (! newImage.getFile().exists()) {
+                images.remove(i);
             }
         }
+        newImagesAdapter.notifyDataSetChanged();
 
-        //if list is empty, show chooser
-        if (images.size() == 0) {
-            showAddImageDialog();
+        if (images.isEmpty()) {
+            shakeIt(emptyView);
+        } else { //upload 'em
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.upload_dialog, null);
+
+            CircleProgress circleProgress = ButterKnife.findById(view, R.id.circleProgress);
+            final TextView progressTextPercent = ButterKnife.findById(view, R.id.progressTextPercent);
+            final TextView progressTextBytes = ButterKnife.findById(view, R.id.progressTextBytes);
+            final ProgressBar progressBar = ButterKnife.findById(view, R.id.progressBar);
+
+            circleProgress.startAnim();
+
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ApiClient.cancelAll();
+                }
+            });
+
+            alertDialogBuilder.setView(view);
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+
+            RequestParams params = new RequestParams();
+            params.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
+            params.put(Config.API_ACTION_PARAM, Config.API_ACTION_UPLOAD_FILE);
+            params.put(Config.API_SESSION_ID_PARAM, preferencesManager.getSessionId());
+
+            ArrayList<File> files = new ArrayList<>();
+            for(NewImage newImage : images) {
+                files.add(newImage.getFile());
+            }
+
+            try {
+                params.put(Config.API_ACTION_UPLOAD_FILE_PARAM, files.toArray(new File[files.size()]));
+            } catch (Exception e) {
+                U.showError(uploadView, R.string.image_new_error_not_found);
+                return; //Why continue? Impossible exception
+            }
+
+            ApiClient.post(Config.API, params, new JsonHttpResponseHandler() {
+                int progress = 0;
+
+                @Override
+                public void onStart() {
+                    alertDialog.show();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        boolean success = response.getBoolean("success");
+                        if (success) {
+                            JSONObject data = response.getJSONObject("data");
+                            if (data.has("gallery")) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        U.clearTempCompressedFiles();
+                                    }
+                                }).start();
+                                String galleryId = data.getString("gallery");
+                                IntentManager.with(getActivity()).openGallery(galleryId, true);
+                            } else {
+                                U.showError(uploadView, R.string.error);
+                            }
+                        } else {
+                            U.showError(uploadView, R.string.error);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        U.showError(uploadView, R.string.exception);
+                    }
+                }
+
+                @Override
+                public void onProgress(long bytesWritten, long totalSize) {
+                    progressTextBytes.setText(U.humanReadableByteCount(bytesWritten, true) + "/" + U.humanReadableByteCount(totalSize, true));
+
+                    if (bytesWritten > totalSize) {
+                        return;
+                    }
+
+                    int newProgress = (int) (100.0 / totalSize * bytesWritten);
+                    if (newProgress > progress) {
+                        progress = newProgress;
+                        progressBar.setProgress(progress);
+                        progressTextPercent.setText(progress + "%");
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    U.showNetworkError(uploadView);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    U.showNetworkError(uploadView);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    U.showNetworkError(uploadView);
+                }
+
+                @Override
+                public void onFinish() {
+                    alertDialog.dismiss();
+                }
+            }, 1000 * 1000 /*1000 seconds limit*/);
         }
     }
 
