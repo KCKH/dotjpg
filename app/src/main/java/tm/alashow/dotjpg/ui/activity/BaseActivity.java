@@ -222,7 +222,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void setActiveActivity() {
-        U.l(getActivityTag());
         switch (getActivityTag()) {
             case Config.ACTIVITY_TAG_MAIN:
                 navigationView.getMenu().findItem(R.id.main).setChecked(false);
@@ -234,7 +233,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 navigationView.getMenu().findItem(R.id.addImage).setChecked(true);
                 break;
             case Config.ACTIVITY_TAG_PREFERENCES:
-                U.l("yep, here we are");
                 navigationView.getMenu().findItem(R.id.preferences).setChecked(true);
                 break;
         }

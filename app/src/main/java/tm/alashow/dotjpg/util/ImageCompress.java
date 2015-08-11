@@ -44,6 +44,13 @@ public class ImageCompress extends AsyncTask<File, String, Boolean> {
     protected Boolean doInBackground(File... params) {
         try {
             String filePath = params[0].getAbsolutePath();
+
+            //this should not happen, whatever. We can't compress gif
+            if (filePath.endsWith(".gif")) {
+                U.copyFile(new File(filePath), OUTPUT);
+                return true;
+            }
+
             Bitmap scaledBitmap;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;

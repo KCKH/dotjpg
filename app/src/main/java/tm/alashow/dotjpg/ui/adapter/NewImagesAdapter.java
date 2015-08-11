@@ -87,8 +87,8 @@ public class NewImagesAdapter extends BaseAdapter {
             }
         });
 
-        //hide compress checkbox when file under 100kb
-        if (newImage.getOriginFile().length() < 100000) {
+        //hide compress checkbox when file under 100kb or if gif. Don't check actual type by reading bytes
+        if (newImage.getOriginFile().length() < 100000 && newImage.getOriginFile().getAbsolutePath().endsWith(".gif")) {
             U.hideView(viewHolder.compressView);
         } else {
             U.showView(viewHolder.compressView);

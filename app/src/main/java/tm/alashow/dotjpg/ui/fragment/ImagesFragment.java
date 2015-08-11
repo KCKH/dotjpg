@@ -140,6 +140,8 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
         RequestParams requestParams = new RequestParams();
         requestParams.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
         requestParams.put(Config.API_ACTION_PARAM, mImagesType);
+        requestParams.put(Config.API_SESSION_ID_PARAM, getBaseActivity().preferencesManager.getSessionId());
+
         requestParams.put(Config.API_PAGE_PARAM, pagination);
 
         if (mImagesType.equals(Config.API_ACTION_GET_ALL_MY)) {
@@ -306,7 +308,6 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
                 //reached end. stop load more
                 stopLoadMore = true;
                 recyclerView.setRefreshing(false);
-
             }
         });
     }

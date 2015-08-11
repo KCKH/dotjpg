@@ -176,10 +176,10 @@ public class NewImageActivity extends BaseActivity {
             final AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.setCanceledOnTouchOutside(false);
 
-            RequestParams params = new RequestParams();
-            params.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
-            params.put(Config.API_ACTION_PARAM, Config.API_ACTION_UPLOAD_FILE);
-            params.put(Config.API_SESSION_ID_PARAM, preferencesManager.getSessionId());
+            RequestParams requestParams = new RequestParams();
+            requestParams.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
+            requestParams.put(Config.API_ACTION_PARAM, Config.API_ACTION_UPLOAD_FILE);
+            requestParams.put(Config.API_SESSION_ID_PARAM, preferencesManager.getSessionId());
 
             ArrayList<File> files = new ArrayList<>();
             for(NewImage newImage : images) {
@@ -187,13 +187,13 @@ public class NewImageActivity extends BaseActivity {
             }
 
             try {
-                params.put(Config.API_ACTION_UPLOAD_FILE_PARAM, files.toArray(new File[files.size()]));
+                requestParams.put(Config.API_ACTION_UPLOAD_FILE_PARAM, files.toArray(new File[files.size()]));
             } catch (Exception e) {
                 U.showError(uploadView, R.string.image_new_error_not_found);
                 return; //Why continue? Impossible exception
             }
 
-            ApiClient.post(Config.API, params, new JsonHttpResponseHandler() {
+            ApiClient.post(Config.API, requestParams, new JsonHttpResponseHandler() {
                 int progress = 0;
 
                 @Override
