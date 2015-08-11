@@ -24,8 +24,6 @@ public class PreferencesFragment extends android.support.v4.preference.Preferenc
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        findPreference("about").setTitle("App Android v" + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
-
         findPreference("session_id").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -36,5 +34,7 @@ public class PreferencesFragment extends android.support.v4.preference.Preferenc
                 return true;
             }
         });
+
+        findPreference("about").setTitle("dotjpg Android v" + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
     }
 }

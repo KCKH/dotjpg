@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import tm.alashow.dotjpg.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 
 /**
@@ -35,6 +36,7 @@ public class PreferencesCategory extends PreferenceCategory {
     protected View onCreateView(ViewGroup parent) {
         TextView categoryTitle = (TextView) super.onCreateView(parent);
         categoryTitle.setTextColor(categoryTitle.getContext().getResources().getColor(R.color.primary));
+        CalligraphyUtils.applyFontToTextView(getContext(), categoryTitle, "fonts/bold.ttf");
         return categoryTitle;
     }
 }

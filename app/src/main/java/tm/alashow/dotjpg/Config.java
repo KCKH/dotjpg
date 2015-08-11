@@ -10,56 +10,56 @@ package tm.alashow.dotjpg;
  */
 public class Config {
 
-    public static String SERVER = "http://dotjpg.co/";
-    public static String API = "api/";
+    public static final String SERVER = "http://dotjpg.co/";
+    public static final String API = "api/";
 
     public static boolean DEBUG = BuildConfig.DEBUG;
-    public static String LOG_APP_NAME = "dotjpg App";
-    public static String LOCAL_IMAGES_FOLDER = "dotjpg";
-    public static String LOCAL_IMAGES_COMPRESSED_TEMP = ".temp_compressed";
+    public static final String LOG_APP_NAME = "dotjpg App";
+    public static final String LOCAL_IMAGES_FOLDER = "dotjpg";
+    public static final String LOCAL_IMAGES_COMPRESSED_TEMP = ".temp_compressed";
 
     //Activity tags
-    public static String ACTIVITY_TAG_MAIN = "main";
-    public static String ACTIVITY_TAG_IMAGE_DETAILS = "main";
-    public static String ACTIVITY_TAG_IMAGE_NEW = "newImage";
-    public static String ACTIVITY_TAG_IMAGES = "images_";
-    public static String ACTIVITY_TAG_PREFERENCES = "preferences";
+    public static final String ACTIVITY_TAG_MAIN = "main";
+    public static final String ACTIVITY_TAG_IMAGE_DETAILS = "main";
+    public static final String ACTIVITY_TAG_IMAGE_NEW = "newImage";
+    public static final String ACTIVITY_TAG_IMAGES = "images_";
+    public static final String ACTIVITY_TAG_PREFERENCES = "preferences";
 
     //Activity extras
-    public static String EXTRA_URL = "EXTRA_URL";
-    public static String EXTRA_HEIGHT = "EXTRA_HEIGHT";
-    public static String EXTRA_WIDTH = "EXTRA_WIDTH";
-    public static String EXTRA_TOP = "EXTRA_TOP";
-    public static String EXTRA_LEFT = "EXTRA_LEFT";
-    public static String EXTRA_ORIENTATION = "EXTRA_ORIENTATION";
+    public static final String EXTRA_URL = "EXTRA_URL";
+    public static final String EXTRA_HEIGHT = "EXTRA_HEIGHT";
+    public static final String EXTRA_WIDTH = "EXTRA_WIDTH";
+    public static final String EXTRA_TOP = "EXTRA_TOP";
+    public static final String EXTRA_LEFT = "EXTRA_LEFT";
+    public static final String EXTRA_ORIENTATION = "EXTRA_ORIENTATION";
 
-    public static String EXTRA_IMAGE_FILENAME = "EXTRA_IMAGE_FILENAME";
-    public static String EXTRA_IMAGE = "EXTRA_IMAGE";
-    public static String EXTRA_GALLERY_ID = "EXTRA_GALLERY_ID";
-    public static String EXTRA_IMAGES_TYPE = "EXTRA_IMAGES_TYPE";
-    public static String EXTRA_URLS = "EXTRA_URLS";
-    public static String EXTRA_POSITION = "EXTRA_POSITION";
+    public static final String EXTRA_IMAGE_FILENAME = "EXTRA_IMAGE_FILENAME";
+    public static final String EXTRA_IMAGE = "EXTRA_IMAGE";
+    public static final String EXTRA_GALLERY_ID = "EXTRA_GALLERY_ID";
+    public static final String EXTRA_IMAGES_TYPE = "EXTRA_IMAGES_TYPE";
+    public static final String EXTRA_URLS = "EXTRA_URLS";
+    public static final String EXTRA_POSITION = "EXTRA_POSITION";
 
     //API config
     public static int API_IMAGE_MAX_FILE_SIZE = 20000000; //20 mb
     public static int API_IMAGE_MAX_FILE_COUNT = 20; //20 mb
 
-    public static String API_PAGE_PARAM = "page";
-    public static String API_SESSION_ID_PARAM = "session_id";
-    public static String API_GALLERY_ID_PARAM = "gallery_id";
+    public static final String API_PAGE_PARAM = "page";
+    public static final String API_SESSION_ID_PARAM = "session_id";
+    public static final String API_GALLERY_ID_PARAM = "gallery_id";
 
-    public static String API_CONTROLLER_PARAM = "controller";
-    public static String API_CONTROLLER_IMAGE = "image";
+    public static final String API_CONTROLLER_PARAM = "controller";
+    public static final String API_CONTROLLER_IMAGE = "image";
 
-    public static String API_ACTION_PARAM = "action";
+    public static final String API_ACTION_PARAM = "action";
 
-    public static String API_ACTION_GET_ALL_MY = "getAll";
-    public static String API_ACTION_GET_SPECIAL = "getAllSpecial";
-    public static String API_ACTION_GET_GALLERY = "getGallery";
+    public static final String API_ACTION_GET_ALL_MY = "getAll";
+    public static final String API_ACTION_GET_SPECIAL = "getAllSpecial";
+    public static final String API_ACTION_GET_GALLERY = "getGallery";
 
-    public static String API_ACTION_UPLOAD_FILE = "fileUpload";
-    public static String API_ACTION_UPLOAD_FILE_PARAM = "images[]";
+    public static final String API_ACTION_UPLOAD_FILE = "fileUpload";
+    public static final String API_ACTION_UPLOAD_FILE_PARAM = "images[]";
 
-    public static String API_ACTION_UPLOAD_URL = "urlUpload";
-    public static String API_ACTION_UPLOAD_URL_PARAM = "images";
+    public static final String API_ACTION_UPLOAD_URL = "urlUpload";
+    public static final String API_ACTION_UPLOAD_URL_PARAM = "images";
 }

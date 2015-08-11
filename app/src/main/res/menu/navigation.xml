@@ -5,7 +5,7 @@
   -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group>
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/main"
             android:icon="@drawable/ic_photo_black"
@@ -22,10 +22,12 @@
 
     <item android:title="@string/other">
         <menu>
-            <item
-                android:id="@+id/preferences"
-                android:icon="@drawable/ic_settings"
-                android:title="@string/preferences.title"/>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/preferences"
+                    android:icon="@drawable/ic_settings"
+                    android:title="@string/preferences.title"/>
+            </group>
         </menu>
     </item>
 

@@ -63,7 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         preferencesManager = PreferencesManager.getInstance(this);
         mHandler = new Handler();
 
-        initToolbar();
+        initBaseViews();
         initAddImageButton();
     }
 
@@ -104,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private void initToolbar() {
+    private void initBaseViews() {
         mToolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(mToolbar);
 
@@ -160,6 +160,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
+        setActiveActivity();
+
         mToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,6 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param menuItem clicked menuItem
      */
     private void onNavigationClicked(MenuItem menuItem) {
+        menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
             case R.id.main:
                 if (! getActivityTag().equals(Config.ACTIVITY_TAG_MAIN)) {
@@ -202,7 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.my:
-                if (! getActivityTag().equals(Config.ACTIVITY_TAG_IMAGES)) {
+                if (! getActivityTag().equals(Config.ACTIVITY_TAG_IMAGES + Config.API_ACTION_GET_ALL_MY)) {
                     IntentManager.with(this).openMyImages();
                 }
                 break;
@@ -215,6 +218,25 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (! getActivityTag().equals(Config.ACTIVITY_TAG_PREFERENCES)) {
                     IntentManager.with(this).openPreferences();
                 }
+                break;
+        }
+    }
+
+    public void setActiveActivity() {
+        U.l(getActivityTag());
+        switch (getActivityTag()) {
+            case Config.ACTIVITY_TAG_MAIN:
+                navigationView.getMenu().findItem(R.id.main).setChecked(false);
+                break;
+            case Config.ACTIVITY_TAG_IMAGES + Config.API_ACTION_GET_ALL_MY:
+                navigationView.getMenu().findItem(R.id.my).setChecked(true);
+                break;
+            case Config.ACTIVITY_TAG_IMAGE_NEW:
+                navigationView.getMenu().findItem(R.id.addImage).setChecked(true);
+                break;
+            case Config.ACTIVITY_TAG_PREFERENCES:
+                U.l("yep, here we are");
+                navigationView.getMenu().findItem(R.id.preferences).setChecked(true);
                 break;
         }
     }

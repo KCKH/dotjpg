@@ -51,6 +51,8 @@ public class ImagesActivity extends BaseActivity {
                 }
             }
         }
+
+        setActiveActivity();
     }
 
     @Override

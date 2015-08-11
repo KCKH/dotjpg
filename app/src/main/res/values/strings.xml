@@ -59,6 +59,7 @@
     <string name="image.new.error.not.found">Surat tapylmady!</string>
 
     <string name="preferences.title">Sazlamalar</string>
+    <string name="preferences.general">Umumy</string>
     <string name="preferences.session">Session ID</string>
     <string name="preferences.session.summary">Ýüklän suratlaryňyzy görmek we pozmak üçin açaryňyz</string>
     <string name="preferences.about">Barada</string>

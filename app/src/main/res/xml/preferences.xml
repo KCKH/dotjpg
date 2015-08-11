@@ -7,7 +7,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <tm.alashow.dotjpg.ui.widget.PreferencesCategory
-        android:title="@string/other">
+        android:title="@string/preferences.general">
         <Preference
             android:key="session_id"
             android:title="@string/preferences.session"
