@@ -118,7 +118,14 @@ public class ImageCompress extends AsyncTask<File, String, Boolean> {
             }
 
             FileOutputStream out = new FileOutputStream(OUTPUT);
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_QUALITY, out);
+
+            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+
+            if (filePath.endsWith(".png")) {
+                format = Bitmap.CompressFormat.PNG;
+            }
+
+            scaledBitmap.compress(format, COMPRESS_QUALITY, out);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

@@ -5,6 +5,7 @@
 
 package tm.alashow.dotjpg.ui.activity;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,6 +41,7 @@ import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.ui.view.HackyViewPager;
 import tm.alashow.dotjpg.util.U;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
@@ -205,6 +207,11 @@ public class ViewImageActivity extends AppCompatActivity {
                 })
                 .into(mImageView);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     public class ImagesFragmentAdapter extends FragmentPagerAdapter {

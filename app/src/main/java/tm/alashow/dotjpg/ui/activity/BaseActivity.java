@@ -197,7 +197,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param menuItem clicked menuItem
      */
     private void onNavigationClicked(MenuItem menuItem) {
-        menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
             case R.id.main:
                 if (! getActivityTag().equals(Config.ACTIVITY_TAG_MAIN)) {

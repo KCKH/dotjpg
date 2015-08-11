@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_medium"/>
+                android:textSize="@dimen/text_medium"
+                style="@style/Bold"/>
         </FrameLayout>
 
     </android.support.v7.widget.CardView>
