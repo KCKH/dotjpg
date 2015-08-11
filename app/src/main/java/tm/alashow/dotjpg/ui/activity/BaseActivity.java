@@ -5,6 +5,7 @@
 
 package tm.alashow.dotjpg.ui.activity;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import tm.alashow.dotjpg.android.PreferencesManager;
 import tm.alashow.dotjpg.interfaces.OnTitleClickedListener;
 import tm.alashow.dotjpg.ui.fragment.BaseFragment;
 import tm.alashow.dotjpg.util.U;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by alashov on 30/07/15.
@@ -243,6 +245,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (mDrawerToggle != null) {
@@ -257,7 +264,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             mDrawerToggle.onConfigurationChanged(newConfig);
         }
     }
-
 
     protected AppCompatActivity getActivity() {
         return this;

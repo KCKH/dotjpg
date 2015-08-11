@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:maxHeight="1000dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/sample"/>
+            tools:src="@drawable/header"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_medium"/>
+                android:textSize="@dimen/text_medium"
+                style="@style/Bold"/>
 
             <TextView
                 android:id="@+id/date"

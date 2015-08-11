@@ -20,6 +20,7 @@ public class Image implements Serializable {
     private String imageId;
     private String galleryId;
     private String deleteToken;
+    private boolean special;
     private long timestamp;
     private int width;
     private int height;
@@ -29,6 +30,7 @@ public class Image implements Serializable {
             this.imageFilename = jsonObject.getString("image");
             this.imageId = DotjpgUtils.trimImageExtension(imageFilename);
 
+            this.special = (jsonObject.has("special")) && jsonObject.getBoolean("special");
             this.timestamp = jsonObject.getLong("timestamp") * 1000;
 
             if (jsonObject.has("gallery")) {
@@ -108,6 +110,20 @@ public class Image implements Serializable {
 
     public int getHeight() {
         return height;
+    }
+
+    public Image setHeight(int height) {
+        this.height = height;
+        return this;
+    }
+
+    public boolean isSpecial() {
+        return special;
+    }
+
+    public Image setSpecial(boolean special) {
+        this.special = special;
+        return this;
     }
 
     public boolean isGif() {

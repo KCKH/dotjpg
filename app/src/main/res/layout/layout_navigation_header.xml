@@ -5,10 +5,27 @@
   -->
 
 <RelativeLayout
-    android:id="@+id/navigation_drawer_user"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="150dp"
+    tools:ignore="MissingPrefix">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/header"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_xxlarge"
+        android:text="@string/app_name"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        style="@style/Bold"/>
 
 </RelativeLayout>

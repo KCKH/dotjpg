@@ -5,16 +5,8 @@
 
 <resources>
 
-    <style name="Title" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="Title.Expanded" parent="Title">
-        <item name="android:textSize">32sp</item>
-    </style>
-    <style name="Title.Collapsed" parent="Title">
-        <item name="android:textSize">@dimen/abc_text_size_title_material_toolbar</item>
-        <item name="android:textStyle">bold</item>
+    <style name="Bold">
+        <item name="fontPath">fonts/bold.ttf</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">

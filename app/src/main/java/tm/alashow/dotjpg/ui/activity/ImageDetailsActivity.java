@@ -114,21 +114,40 @@ public class ImageDetailsActivity extends BaseActivity {
                 addInfoView(R.string.image_delete, DotjpgUtils.getImageDeleteUrl(mImage.getDeleteToken()), true);
             }
             if (mImage.hasGalleryId()) {
-                addInfoView(R.string.image_gallery, DotjpgUtils.getImageGalleryUrl(mImage.getGalleryId()), true);
+                addInfoView(R.string.image_gallery, DotjpgUtils.getImageGalleryUrl(mImage.getGalleryId()), true, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        IntentManager.with(getActivity()).openGallery(mImage.getGalleryId());
+                    }
+                });
             }
         }
 
-        addInfoView(R.string.image_page, DotjpgUtils.getImagePageUrl(DotjpgUtils.trimImageExtension(mImageFilename)), true);
+        //images from special lib has not pages, so don't add page link
+        if (! mImage.isSpecial()) {
+            addInfoView(R.string.image_page, DotjpgUtils.getImagePageUrl(DotjpgUtils.trimImageExtension(mImageFilename)), true);
+        }
+
         addInfoView(R.string.image_html, DotjpgUtils.getImageHtmlMarkup(mImageFilename), false);
         addInfoView(R.string.image_markdown, DotjpgUtils.getImageMarkdownMarkup(mImageFilename), false);
         addInfoView(R.string.image_bb, DotjpgUtils.getImageBbMarkup(mImageFilename), false);
     }
 
+
     private void addInfoView(@StringRes int label, final String text, boolean isLink) {
-        addInfoView(getString(label), text, isLink);
+        addInfoView(label, text, isLink, null);
     }
 
     private void addInfoView(String label, final String text, boolean isLink) {
+        addInfoView(label, text, isLink, null);
+    }
+
+    private void addInfoView(
+        @StringRes int label, final String text, boolean isLink, View.OnClickListener listener) {
+        addInfoView(getString(label), text, isLink, listener);
+    }
+
+    private void addInfoView(String label, final String text, boolean isLink, View.OnClickListener onClickListener) {
         View view = LayoutInflater.from(this).inflate(R.layout.view_image_info, null);
 
         TextView labelView = ButterKnife.findById(view, R.id.label);
@@ -138,7 +157,9 @@ public class ImageDetailsActivity extends BaseActivity {
         labelView.setText(label);
         textView.setText(text);
 
-        if (isLink) {
+        if (onClickListener != null) {
+            labelView.setOnClickListener(onClickListener);
+        } else if (isLink) {
             labelView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -7,7 +7,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="view_margin">3dp</dimen>
-    <dimen name="text_xxlarge">30sp</dimen>
+    <dimen name="text_xxxlarge">30sp</dimen>
+    <dimen name="text_xxlarge">25sp</dimen>
     <dimen name="text_xlarge">22sp</dimen>
     <dimen name="text_large">16sp</dimen>
     <dimen name="text_medium">14sp</dimen>

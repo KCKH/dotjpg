@@ -28,6 +28,7 @@ public class ImagesActivity extends BaseActivity {
         if (data != null) {
             Uri uri = getIntent().getData();
             if (uri != null) {
+                U.l(uri.toString());
                 mGalleryId = uri.toString().split("/")[4];
                 if (U.getTrimmedString(mGalleryId).length() > 0) {
                     U.attachFragment(this, ImagesFragment.createInstance(Config.API_ACTION_GET_GALLERY, mGalleryId));
@@ -40,8 +41,14 @@ public class ImagesActivity extends BaseActivity {
                 }
             }
 
-            if (mGalleryId != null && getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(mGalleryId);
+            if (getSupportActionBar() != null) {
+                if (mGalleryId != null) {
+                    getSupportActionBar().setTitle(mGalleryId);
+                }
+
+                if (mImagesType != null && mImagesType.equals(Config.API_ACTION_GET_ALL_MY)) {
+                    getSupportActionBar().setTitle(R.string.images_my);
+                }
             }
         }
     }

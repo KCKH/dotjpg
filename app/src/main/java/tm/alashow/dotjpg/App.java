@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 public class App extends Application {
     public static volatile Context applicationContext = null;
     public static volatile Handler applicationHandler = null;
@@ -33,6 +35,12 @@ public class App extends Application {
         postInitApplication();
         applicationContext = getApplicationContext();
         applicationHandler = new Handler(applicationContext.getMainLooper());
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 
     @Override

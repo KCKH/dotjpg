@@ -56,6 +56,7 @@ import tm.alashow.dotjpg.App;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.android.IntentManager;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class U {
     public static int RESULT_GALLERY = 0xea;
@@ -167,17 +168,20 @@ public class U {
     }
 
     /**
-     * Changes title and divider color of alert dialog
+     * Custom alert dialog
      *
      * @param alertDialog AlertDialog object for change
-     * @param color       Color for change
      */
-    public static void customAlertDialog(AlertDialog alertDialog, int color) {
+    public static void customAlertDialog(AlertDialog alertDialog) {
         try {
-            int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+            int color = alertDialog.getContext().getResources().getColor(R.color.primary);
+            int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", "id", "android");
             if (textViewId != 0) {
                 TextView tv = (TextView) alertDialog.findViewById(textViewId);
-                tv.setTextColor(color);
+                if (tv != null) {
+                    CalligraphyUtils.applyFontToTextView(alertDialog.getContext(), tv, "fonts/bold.ttf");
+                    tv.setTextColor(color);
+                }
             }
             int dividerId = alertDialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
             if (dividerId != 0) {

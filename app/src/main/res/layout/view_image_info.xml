@@ -9,7 +9,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="10dp"
+    tools:ignore="MissingPrefix">
 
     <TextView
         android:id="@+id/label"
@@ -21,6 +22,7 @@
         android:layout_alignParentTop="true"
         android:maxLines="2"
         android:padding="3dp"
+        style="@style/Bold"
         tools:text="HTML"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
