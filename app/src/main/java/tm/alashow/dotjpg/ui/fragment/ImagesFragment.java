@@ -81,6 +81,9 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mHandler = new Handler();
+
         if (getArguments() != null) {
             this.mImagesType = getArguments().getString(Config.EXTRA_IMAGES_TYPE, Config.API_ACTION_GET_SPECIAL);
             if (mImagesType.equals(Config.API_ACTION_GET_GALLERY)) {
@@ -93,7 +96,6 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mHandler = new Handler();
         initViews();
 
         loadImages(TYPE_NEW, new OnImagesLoadedListener(TYPE_NEW) {

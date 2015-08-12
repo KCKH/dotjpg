@@ -19,13 +19,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 /**
- * Compress image in background
+ * Compress image in background thread
  */
 public class ImageCompress extends AsyncTask<File, String, Boolean> {
     private Context context;
     private OnImageCompressListener imageCompressListener;
     private ProgressDialog dialog;
-    private int COMPRESS_QUALITY = 80;
+    private int COMPRESS_QUALITY = 70;
     private File OUTPUT;
 
     public ImageCompress(Context context, OnImageCompressListener imageCompressListener, File output) {
@@ -117,11 +117,11 @@ public class ImageCompress extends AsyncTask<File, String, Boolean> {
             scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
 
             if (new File(filePath).length() / 1024 > 4000) {
-                COMPRESS_QUALITY = 75;
+                COMPRESS_QUALITY = 60;
             }
 
             if (new File(filePath).length() / 1024 > 9000) {
-                COMPRESS_QUALITY = 60;
+                COMPRESS_QUALITY = 45;
             }
 
             FileOutputStream out = new FileOutputStream(OUTPUT);

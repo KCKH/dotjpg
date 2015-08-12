@@ -62,4 +62,7 @@ public class Config {
 
     public static final String API_ACTION_UPLOAD_URL = "urlUpload";
     public static final String API_ACTION_UPLOAD_URL_PARAM = "images";
+
+
+    public static final int IMAGE_COMPRESS_MIN_BYTE = 100 * 1024; //100 kb
 }

@@ -5,6 +5,8 @@
 
 package tm.alashow.dotjpg.ui.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v7.app.AlertDialog;
@@ -35,6 +37,15 @@ public class PreferencesFragment extends android.support.v4.preference.Preferenc
             }
         });
 
-        findPreference("about").setTitle("dotjpg Android v" + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
+
+        Preference preference = findPreference("about");
+        preference.setTitle("dotjpg v" + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
+        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://alashov.com")));
+                return true;
+            }
+        });
     }
 }

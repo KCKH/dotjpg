@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.android.IntentManager;
 import tm.alashow.dotjpg.model.NewImage;
@@ -88,7 +89,7 @@ public class NewImagesAdapter extends BaseAdapter {
         });
 
         //hide compress checkbox when file under 100kb or if gif. Don't check actual type by reading bytes
-        if (newImage.getOriginFile().length() < 100000 && newImage.getOriginFile().getAbsolutePath().endsWith(".gif")) {
+        if (newImage.getOriginFile().length() < Config.IMAGE_COMPRESS_MIN_BYTE || newImage.getOriginFile().getAbsolutePath().endsWith(".gif")) {
             U.hideView(viewHolder.compressView);
         } else {
             U.showView(viewHolder.compressView);
