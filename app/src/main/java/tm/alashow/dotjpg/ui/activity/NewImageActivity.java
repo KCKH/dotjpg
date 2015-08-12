@@ -8,11 +8,13 @@ package tm.alashow.dotjpg.ui.activity;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -28,6 +32,7 @@ import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -35,6 +40,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,7 +80,12 @@ public class NewImageActivity extends BaseActivity {
         String type = intent.getType();
 
         if (Intent.ACTION_SEND.equals(intentAction) || Intent.ACTION_SEND_MULTIPLE.equals(intentAction) && type != null) {
-            if (type.startsWith("image/")) {
+            if ("text/plain".equals(type)) {
+                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+                if (sharedText != null) {
+                    urlUploadDialog(sharedText);
+                }
+            } else if (type.startsWith("image/")) {
                 if (Intent.ACTION_SEND.equals(intentAction)) {
                     Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                     if (imageUri != null) {
@@ -143,130 +154,6 @@ public class NewImageActivity extends BaseActivity {
         });
     }
 
-    private void uploadImages() {
-        for(int i = 0; i < images.size(); i++) {
-            NewImage newImage = images.get(i);
-            if (! newImage.getFile().exists()) {
-                images.remove(i);
-            }
-        }
-        newImagesAdapter.notifyDataSetChanged();
-
-        if (images.isEmpty()) {
-            shakeIt(emptyView);
-        } else { //upload 'em
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.upload_dialog, null);
-
-            CircleProgress circleProgress = ButterKnife.findById(view, R.id.circleProgress);
-            final TextView progressTextPercent = ButterKnife.findById(view, R.id.progressTextPercent);
-            final TextView progressTextBytes = ButterKnife.findById(view, R.id.progressTextBytes);
-            final ProgressBar progressBar = ButterKnife.findById(view, R.id.progressBar);
-
-            circleProgress.startAnim();
-
-            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-            alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ApiClient.cancelAll();
-                }
-            });
-
-            alertDialogBuilder.setView(view);
-            final AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-
-            RequestParams requestParams = new RequestParams();
-            requestParams.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
-            requestParams.put(Config.API_ACTION_PARAM, Config.API_ACTION_UPLOAD_FILE);
-            requestParams.put(Config.API_SESSION_ID_PARAM, preferencesManager.getSessionId());
-
-            ArrayList<File> files = new ArrayList<>();
-            for(NewImage newImage : images) {
-                files.add(newImage.getFile());
-            }
-
-            try {
-                requestParams.put(Config.API_ACTION_UPLOAD_FILE_PARAM, files.toArray(new File[files.size()]));
-            } catch (Exception e) {
-                U.showError(uploadView, R.string.image_new_error_not_found);
-                return; //Why continue? Impossible exception
-            }
-
-            ApiClient.post(Config.API, requestParams, new JsonHttpResponseHandler() {
-                int progress = 0;
-
-                @Override
-                public void onStart() {
-                    alertDialog.show();
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        boolean success = response.getBoolean("success");
-                        if (success) {
-                            JSONObject data = response.getJSONObject("data");
-                            if (data.has("gallery")) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        U.clearTempCompressedFiles();
-                                    }
-                                }).start();
-                                String galleryId = data.getString("gallery");
-                                IntentManager.with(getActivity()).openGallery(galleryId, true);
-                            } else {
-                                U.showError(uploadView, R.string.error);
-                            }
-                        } else {
-                            U.showError(uploadView, R.string.error);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        U.showError(uploadView, R.string.exception);
-                    }
-                }
-
-                @Override
-                public void onProgress(long bytesWritten, long totalSize) {
-                    progressTextBytes.setText(U.humanReadableByteCount(bytesWritten, true) + "/" + U.humanReadableByteCount(totalSize, true));
-
-                    if (bytesWritten > totalSize) {
-                        return;
-                    }
-
-                    int newProgress = (int) (100.0 / totalSize * bytesWritten);
-                    if (newProgress > progress) {
-                        progress = newProgress;
-                        progressBar.setProgress(progress);
-                        progressTextPercent.setText(progress + "%");
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    U.showNetworkError(uploadView);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    U.showNetworkError(uploadView);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    U.showNetworkError(uploadView);
-                }
-
-                @Override
-                public void onFinish() {
-                    alertDialog.dismiss();
-                }
-            }, 1000 * 1000 /*1000 seconds limit*/);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.new_image, menu);
@@ -278,6 +165,9 @@ public class NewImageActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.add:
                 showAddImageDialog();
+                return true;
+            case R.id.url:
+                urlUploadDialog();
                 return true;
         }
         return true;
@@ -368,6 +258,260 @@ public class NewImageActivity extends BaseActivity {
         AnimatorSet mAnimatorSet = new AnimatorSet();
         mAnimatorSet.playTogether(ObjectAnimator.ofFloat(target, "translationX", 0, 25, - 25, 25, - 25, 15, - 15, 6, - 6, 0));
         mAnimatorSet.start();
+    }
+
+    private void uploadImages() {
+        for(int i = 0; i < images.size(); i++) {
+            NewImage newImage = images.get(i);
+            if (! newImage.getFile().exists()) {
+                images.remove(i);
+            }
+        }
+        newImagesAdapter.notifyDataSetChanged();
+
+        if (images.isEmpty()) {
+            shakeIt(emptyView);
+        } else { //upload 'em
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.upload_dialog, null);
+
+            CircleProgress circleProgress = ButterKnife.findById(view, R.id.circleProgress);
+            final TextView progressTextPercent = ButterKnife.findById(view, R.id.progressTextPercent);
+            final TextView progressTextBytes = ButterKnife.findById(view, R.id.progressTextBytes);
+            final ProgressBar progressBar = ButterKnife.findById(view, R.id.progressBar);
+
+            circleProgress.startAnim();
+
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ApiClient.cancelAll();
+                }
+            });
+
+            alertDialogBuilder.setView(view);
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+
+            RequestParams requestParams = new RequestParams();
+            requestParams.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
+            requestParams.put(Config.API_ACTION_PARAM, Config.API_ACTION_UPLOAD_FILE);
+            requestParams.put(Config.API_SESSION_ID_PARAM, preferencesManager.getSessionId());
+
+            ArrayList<File> files = new ArrayList<>();
+            for(NewImage newImage : images) {
+                files.add(newImage.getFile());
+            }
+
+            try {
+                requestParams.put(Config.API_ACTION_UPLOAD_FILE_PARAM, files.toArray(new File[files.size()]));
+            } catch (Exception e) {
+                U.showError(uploadView, R.string.image_new_error_not_found);
+                return; //Why continue? Impossible exception
+            }
+
+            ApiClient.post(Config.API, requestParams, new JsonHttpResponseHandler() {
+                int progress = 0;
+
+                @Override
+                public void onStart() {
+                    alertDialog.show();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        boolean success = response.getBoolean("success");
+                        if (success) {
+                            JSONObject data = response.getJSONObject("data");
+                            if (data.has("gallery")) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        U.clearTempCompressedFiles();
+                                    }
+                                }).start();
+                                String galleryId = data.getString("gallery");
+                                IntentManager.with(getActivity()).openGallery(galleryId, true);
+                            } else {
+                                U.showError(uploadView, R.string.image_new_upload_fail);
+                            }
+                        } else {
+                            U.showError(uploadView, R.string.error);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        U.showError(uploadView, R.string.exception);
+                    }
+                }
+
+                @Override
+                public void onProgress(long bytesWritten, long totalSize) {
+                    progressTextBytes.setText(U.humanReadableByteCount(bytesWritten, true) + "/" + U.humanReadableByteCount(totalSize, true));
+
+                    if (bytesWritten > totalSize) {
+                        return;
+                    }
+
+                    int newProgress = (int) (100.0 / totalSize * bytesWritten);
+                    if (newProgress > progress) {
+                        progress = newProgress;
+                        progressBar.setProgress(progress);
+                        progressTextPercent.setText(progress + "%");
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    U.showNetworkError(uploadView);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    U.showNetworkError(uploadView);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    U.showNetworkError(uploadView);
+                }
+
+                @Override
+                public void onFinish() {
+                    alertDialog.dismiss();
+                }
+            }, 1000 * 1000 /*1000 seconds limit*/);
+        }
+    }
+
+    private void urlUploadDialog() {
+        urlUploadDialog(null);
+    }
+
+    /**
+     * @param images default text for urls input, for shared text
+     */
+    private void urlUploadDialog(String images) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        final MaterialEditText input = new MaterialEditText(getActivity());
+
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(30, 10, 30, 0);
+        input.setMaxLines(4);
+        input.setPrimaryColor(getResources().getColor(R.color.primary));
+        input.setUnderlineColor(getResources().getColor(R.color.primary));
+
+        if (images != null) {
+            input.setText(images);
+        }
+
+        layout.addView(input, params);
+
+
+        alertDialogBuilder.setView(layout).setTitle(R.string.image_new_url)
+            .setMessage(R.string.image_new_url_hint)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.image_new_upload, null);
+
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        String images = input.getText().toString();
+                        Matcher matcher = Patterns.WEB_URL.matcher(images);
+
+                        if (! matcher.find()) { //if there no any urls
+                            shakeIt(input);
+                        } else {
+                            urlUpload(images, alertDialog);
+                        }
+                    }
+                });
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    /**
+     * @param images      string that contains url of images
+     * @param alertDialog dialog with input, to dismiss after success uploading. Maybe user will come back
+     */
+    private void urlUpload(String images, final AlertDialog alertDialog) {
+
+        final ProgressDialog progressDialog = U.createCancellableActionLoading(this, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                ApiClient.cancelAll();
+            }
+        });
+
+        RequestParams requestParams = new RequestParams();
+        requestParams.put(Config.API_CONTROLLER_PARAM, Config.API_CONTROLLER_IMAGE);
+        requestParams.put(Config.API_ACTION_PARAM, Config.API_ACTION_UPLOAD_URL);
+        requestParams.put(Config.API_SESSION_ID_PARAM, preferencesManager.getSessionId());
+
+        requestParams.put(Config.API_ACTION_UPLOAD_URL_PARAM, images);
+
+        ApiClient.post(Config.API, requestParams, new JsonHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    boolean success = response.getBoolean("success");
+                    if (success) {
+                        JSONObject data = response.getJSONObject("data");
+                        if (data.has("gallery")) {
+                            alertDialog.dismiss();
+                            String galleryId = data.getString("gallery");
+                            IntentManager.with(getActivity()).openGallery(galleryId, false);
+                        } else {
+                            U.showCenteredToast(getActivity(), R.string.image_new_url_fail);
+                        }
+                    } else {
+                        U.showCenteredToast(getActivity(), R.string.error);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    U.showCenteredToast(getActivity(), R.string.exception);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                U.showCenteredToast(getActivity(), R.string.network_error);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                U.showCenteredToast(getActivity(), R.string.network_error);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                U.showCenteredToast(getActivity(), R.string.network_error);
+            }
+
+            @Override
+            public void onFinish() {
+                progressDialog.dismiss();
+            }
+        }, 60 * 1000);
     }
 
     @Override
