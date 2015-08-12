@@ -8,9 +8,10 @@ package tm.alashow.dotjpg.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtil {
-    public static SimpleDateFormat hourMinuteFormat = new SimpleDateFormat("HH:mm");
+    public static SimpleDateFormat hourMinuteFormat = new SimpleDateFormat("HH:mm", Locale.US);
 
     /**
      * Convert Java {@link Date} objects in just "a few minutes"

@@ -19,7 +19,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.Date;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -103,13 +103,11 @@ public class ImageDetailsActivity extends BaseActivity {
             }
         });
 
-        if (imageObject()) {
-            dateView.setText(DateUtil.getTimeAgo(new Date(mImage.getTimestamp())));
-        }
-
         //Adding info views
         addInfoView(R.string.image_direct, getImageUrl(), true);
         if (imageObject()) {
+            dateView.setText(DateUtil.getTimeAgo(new Date(mImage.getTimestamp())));
+
             if (mImage.hasDeleteToken()) {
                 addInfoView(R.string.image_delete, DotjpgUtils.getImageDeleteUrl(mImage.getDeleteToken()), true);
             }
@@ -121,6 +119,8 @@ public class ImageDetailsActivity extends BaseActivity {
                     }
                 });
             }
+        } else {
+            U.hideView(dateView);
         }
 
         //images from special lib has not pages, so don't add page link
