@@ -1,7 +1,16 @@
 # dotjpg
 dotjpg.co android client app
 
-Currently under development
+[![image](https://developer.android.com/images/brand/en_app_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=tm.alashow.dotjpg)
+
+App allows uploading up to 20 images from device and url, with compressing.
+Uploaded images can be viewed, deleted, shared. No registrations.
+
+##Screenshots
+[![image](http://dotjpg.co/DrOhZ.png)](http://dotjpg.co/i/DrOhZ)
+[![image](http://dotjpg.co/RCf.png)](http://dotjpg.co/i/RCf)
+[![image](http://dotjpg.co/3d.png)](http://dotjpg.co/i/3d)
+[![image](http://dotjpg.co/2Z.png)](http://dotjpg.co/i/2Z)
 
 ## License
 
