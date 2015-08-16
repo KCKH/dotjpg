@@ -57,11 +57,11 @@
     <string name="image.new.upload">Ýükle</string>
     <string name="image.new.upload.fail">Suratlar ýüklenmedi</string>
 
-
     <string name="image.new.url">URL-dan ýükle</string>
     <string name="image.new.url.hint">Suratlaryň salgylaryny ýazyň. Bir gezekde iň kän 20 surat ýükläp bolýar. jpg, png, gif, bmp formatlar kabul edilýär.</string>
     <string name="image.new.url.fail">Suratlar tapylmady ýa-da suratlaryň formaty ýalňyş!</string>
 
+    <string name="image.new.error.type">Suratyň formaty kabul edilenok! jpg, png, gif, bmp formatlar kabul edilýär.</string>
     <string name="image.new.error.max.count">Iň kän 20 surat ýükläp bolýar!</string>
     <string name="image.new.error.max.size">Bir suratyň iň uly ölçegi %1$s!</string>
     <string name="image.new.error.not.found">Surat tapylmady!</string>

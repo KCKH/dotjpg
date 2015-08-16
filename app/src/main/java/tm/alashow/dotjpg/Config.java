@@ -43,6 +43,7 @@ public class Config {
     //API config
     public static int API_IMAGE_MAX_FILE_SIZE = 20000000; //20 mb
     public static int API_IMAGE_MAX_FILE_COUNT = 20; //20 mb
+    public static String[] API_ALLOWED_IMAGE_TYPES = {"jpeg", "jpg", "png", "gif", "bmp"};
 
     public static final String API_PAGE_PARAM = "page";
     public static final String API_SESSION_ID_PARAM = "session_id";

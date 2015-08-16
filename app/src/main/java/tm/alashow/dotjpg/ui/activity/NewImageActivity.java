@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 
 import butterknife.Bind;
@@ -237,8 +238,13 @@ public class NewImageActivity extends BaseActivity {
 
         if (image.exists()) {
             if (image.length() < Config.API_IMAGE_MAX_FILE_SIZE) {
-                images.add(new NewImage().setOriginFile(image));
-                newImagesAdapter.notifyDataSetChanged();
+                String mimeType = U.getImageType(image);
+                if (Arrays.asList(Config.API_ALLOWED_IMAGE_TYPES).contains(mimeType)) {
+                    images.add(new NewImage().setOriginFile(image));
+                    newImagesAdapter.notifyDataSetChanged();
+                } else {
+                    U.showError(emptyView, R.string.image_new_error_type);
+                }
             } else {
                 U.showError(emptyView, R.string.image_new_error_max_size);
             }
@@ -425,7 +431,6 @@ public class NewImageActivity extends BaseActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
 
                         String images = input.getText().toString();
                         Matcher matcher = Patterns.WEB_URL.matcher(images);

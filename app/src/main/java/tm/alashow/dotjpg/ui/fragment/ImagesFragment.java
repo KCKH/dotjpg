@@ -290,6 +290,8 @@ public class ImagesFragment extends BaseFragment implements OnTitleClickedListen
             }
 
             if (mImagesType.equals(Config.API_ACTION_GET_ALL_MY)) {
+                images.clear();
+                setImagesAdapter();
                 U.showView(retryView);
                 U.showError(getView(), R.string.images_my_empty);
             }
