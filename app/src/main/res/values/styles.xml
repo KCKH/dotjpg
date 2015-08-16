@@ -55,4 +55,9 @@
         <attr name="color3" format="reference|color"/>
     </declare-styleable>
 
+    <style name="BoldTitleTextStyle">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="fontPath">fonts/bold.ttf</item>
+    </style>
+
 </resources>

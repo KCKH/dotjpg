@@ -29,7 +29,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -56,7 +55,6 @@ import tm.alashow.dotjpg.App;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.android.IntentManager;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class U {
     public static int RESULT_GALLERY = 0xea;
@@ -167,34 +165,6 @@ public class U {
         Log.e(Config.LOG_APP_NAME, message);
     }
 
-    /**
-     * Custom alert dialog
-     *
-     * @param alertDialog AlertDialog object for change
-     */
-    public static void customAlertDialog(AlertDialog alertDialog) {
-        try {
-            int color = alertDialog.getContext().getResources().getColor(R.color.primary);
-            int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", "id", "android");
-            if (textViewId != 0) {
-                TextView tv = (TextView) alertDialog.findViewById(textViewId);
-                if (tv != null) {
-                    CalligraphyUtils.applyFontToTextView(alertDialog.getContext(), tv, "fonts/bold.ttf");
-                    tv.setTextColor(color);
-                }
-            }
-            int dividerId = alertDialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-            if (dividerId != 0) {
-                View divider = alertDialog.findViewById(dividerId);
-                if (divider != null) {
-                    divider.setBackgroundColor(color);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static String getRealPathFromURI(Activity context, Uri contentUri) {
         String result;
         Cursor cursor = context.getContentResolver().query(contentUri, null, null, null, null);
@@ -208,7 +178,6 @@ public class U {
         }
         return result;
     }
-
 
     /**
      * For picasso image loadings

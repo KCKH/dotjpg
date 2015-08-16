@@ -18,6 +18,8 @@ import android.os.AsyncTask;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import tm.alashow.dotjpg.R;
+
 /**
  * Compress image in background thread
  */
@@ -33,6 +35,7 @@ public class ImageCompress extends AsyncTask<File, String, Boolean> {
         this.imageCompressListener = imageCompressListener;
         this.OUTPUT = output;
         dialog = U.createActionLoading(this.context);
+        dialog.setMessage(context.getString(R.string.image_compressing));
     }
 
     @Override
@@ -127,10 +130,6 @@ public class ImageCompress extends AsyncTask<File, String, Boolean> {
             FileOutputStream out = new FileOutputStream(OUTPUT);
 
             Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-
-            if (filePath.endsWith(".png")) {
-                format = Bitmap.CompressFormat.PNG;
-            }
 
             scaledBitmap.compress(format, COMPRESS_QUALITY, out);
         } catch (Exception e) {

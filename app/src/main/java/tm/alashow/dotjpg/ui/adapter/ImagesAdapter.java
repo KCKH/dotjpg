@@ -82,9 +82,11 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
                 if (image.hasGalleryId()) {
                     actions.add(mContext.getString(R.string.image_gallery));
+                    actions.add(mContext.getString(R.string.image_gallery_copy_link));
                 }
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext, R.style.AppDialog);
+                alertDialogBuilder.setTitle(image.getImageFilename());
                 alertDialogBuilder.setItems(actions.toArray(new String[actions.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -98,6 +100,10 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                                 break;
                             case 2:
                                 IntentManager.with(mContext).openGallery(image.getGalleryId());
+                                break;
+                            case 3:
+                                U.copyToClipboard(mContext, DotjpgUtils.getImageGalleryUrl(image.getGalleryId()));
+                                U.showSnack(v, R.string.image_link_copied, U.SNACK_DEFAULT);
                                 break;
                         }
                     }

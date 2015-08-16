@@ -118,7 +118,7 @@ public class NewImageActivity extends BaseActivity {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AppDialog);
 
                 alertDialogBuilder.setTitle(R.string.image_new_remove);
                 alertDialogBuilder.setMessage(R.string.image_new_remove_description);
@@ -210,7 +210,7 @@ public class NewImageActivity extends BaseActivity {
             }
         };
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.AppDialog)
             .setTitle(getString(R.string.image_new_add))
             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item) {
@@ -281,7 +281,7 @@ public class NewImageActivity extends BaseActivity {
 
             circleProgress.startAnim();
 
-            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AppDialog);
             alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -392,7 +392,7 @@ public class NewImageActivity extends BaseActivity {
      * @param images default text for urls input, for shared text
      */
     private void urlUploadDialog(String images) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AppDialog);
         final MaterialEditText input = new MaterialEditText(getActivity());
 
         LinearLayout layout = new LinearLayout(getActivity());

@@ -27,12 +27,14 @@
     <string name="images.my.empty">Entek surat ýüklemediňiz</string>
     <string name="images.gallery.empty">Albom tapylmady!</string>
 
+    <string name="image.compressing">Kiçeldilýär..</string>
     <string name="image.direct">Göni link</string>
     <string name="image.html">HTML</string>
     <string name="image.markdown">Markdown</string>
     <string name="image.page">Suratyň sahypasy</string>
     <string name="image.delete">Pozmak üçin link</string>
     <string name="image.gallery">Albom</string>
+    <string name="image.gallery.copy.link">Albomyň linkini nusgala</string>
     <string name="image.bb">bbcode</string>
     <string name="image.link.copy">Linki nusgala</string>
     <string name="image.link.copied">Nusgalandy</string>

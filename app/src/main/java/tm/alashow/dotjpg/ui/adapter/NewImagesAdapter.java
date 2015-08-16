@@ -100,7 +100,7 @@ public class NewImagesAdapter extends BaseAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     //we have old compressed file, don't compress file again
-                    if (newImage.isCheckedCompressed()) {
+                    if (newImage.hasCompressed()) {
                         newImage.setCompressed(true);
                         viewHolder.setViews(context, newImage.getFile());
                         return;
@@ -129,7 +129,7 @@ public class NewImagesAdapter extends BaseAdapter {
         });
 
         //is that checked
-        viewHolder.compressView.setChecked(newImage.isCheckedCompressed());
+        viewHolder.compressView.setChecked(newImage.isCompressed() && newImage.hasCompressed());
 
         return convertView;
     }

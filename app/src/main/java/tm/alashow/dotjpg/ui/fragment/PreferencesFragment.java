@@ -29,7 +29,7 @@ public class PreferencesFragment extends android.support.v4.preference.Preferenc
         findPreference("session_id").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(getActivity(), R.style.AppDialog)
                     .setTitle(R.string.preferences_session)
                     .setMessage(getString(R.string.preferences_session_summary) + ":\n\n" + PreferencesManager.getInstance(getActivity()).getSessionId())
                     .show();

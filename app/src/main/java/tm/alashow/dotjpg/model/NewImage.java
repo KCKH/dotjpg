@@ -49,14 +49,14 @@ public class NewImage {
     }
 
     public File getFile() {
-        return (isCheckedCompressed() && compressed) ? getCompressedFile() : getOriginFile();
+        return (hasCompressed() && compressed) ? getCompressedFile() : getOriginFile();
     }
 
     public Uri getUri() {
         return Uri.fromFile(getFile());
     }
 
-    public boolean isCheckedCompressed() {
+    public boolean hasCompressed() {
         return getCompressedFile() != null && getCompressedFile().exists();
     }
 }
