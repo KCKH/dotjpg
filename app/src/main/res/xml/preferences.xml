@@ -8,6 +8,11 @@
 
     <tm.alashow.dotjpg.ui.widget.PreferencesCategory
         android:title="@string/preferences.general">
+        <SwitchPreference
+            android:key="notifications"
+            android:defaultValue="true"
+            android:title="@string/preferences.notifications"
+            android:summary="@string/preferences.notifications.summary"/>
         <Preference
             android:key="session_id"
             android:title="@string/preferences.session"

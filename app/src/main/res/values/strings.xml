@@ -68,6 +68,8 @@
 
     <string name="preferences.title">Sazlamalar</string>
     <string name="preferences.general">Umumy</string>
+    <string name="preferences.notifications">Bildirişler</string>
+    <string name="preferences.notifications.summary">Täze suratlar goşulanda gelýän bildirişler</string>
     <string name="preferences.session">Session ID</string>
     <string name="preferences.session.summary">Ýüklän suratlaryňyzy görmek we pozmak üçin açaryňyz</string>
     <string name="preferences.github">GitHub Sahypasy</string>

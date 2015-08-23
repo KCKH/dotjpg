@@ -65,6 +65,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         initBaseViews();
         initAddImageButton();
+
+        U.l(getActivityTag());
     }
 
     @Override

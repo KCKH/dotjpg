@@ -12,6 +12,7 @@ public class Config {
 
     public static final String SERVER = "http://dotjpg.co/";
     public static final String API = "api/";
+    public static final String GCM_SENDER_ID = "835054112702";
 
     public static boolean DEBUG = BuildConfig.DEBUG;
     public static final String LOG_APP_NAME = "dotjpg App";
@@ -47,16 +48,19 @@ public class Config {
 
     public static final String API_PAGE_PARAM = "page";
     public static final String API_SESSION_ID_PARAM = "session_id";
+    public static final String API_REGISTRATION_ID_PARAM = "reg_id";
     public static final String API_GALLERY_ID_PARAM = "gallery_id";
 
     public static final String API_CONTROLLER_PARAM = "controller";
     public static final String API_CONTROLLER_IMAGE = "image";
+    public static final String API_CONTROLLER_USER = "user";
 
     public static final String API_ACTION_PARAM = "action";
 
     public static final String API_ACTION_GET_ALL_MY = "getAll";
     public static final String API_ACTION_GET_SPECIAL = "getAllSpecial";
     public static final String API_ACTION_GET_GALLERY = "getGallery";
+    public static final String API_ACTION_REGISTER_USER = "registerUser";
 
     public static final String API_ACTION_UPLOAD_FILE = "fileUpload";
     public static final String API_ACTION_UPLOAD_FILE_PARAM = "images[]";
