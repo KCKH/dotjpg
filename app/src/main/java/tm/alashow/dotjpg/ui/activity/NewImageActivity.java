@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.tt.whorlviewlibrary.WhorlView;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -51,7 +52,6 @@ import tm.alashow.dotjpg.android.IntentManager;
 import tm.alashow.dotjpg.model.ListItem;
 import tm.alashow.dotjpg.model.NewImage;
 import tm.alashow.dotjpg.ui.adapter.NewImagesAdapter;
-import tm.alashow.dotjpg.ui.view.CircleProgress;
 import tm.alashow.dotjpg.util.ApiClient;
 import tm.alashow.dotjpg.util.U;
 
@@ -234,7 +234,7 @@ public class NewImageActivity extends BaseActivity {
             return;
         }
 
-        File image = new File(U.getRealPathFromURI(this, uriImage));
+        File image = new File(U.getPath(uriImage));
 
         if (image.exists()) {
             if (image.length() < Config.API_IMAGE_MAX_FILE_SIZE) {
@@ -280,12 +280,12 @@ public class NewImageActivity extends BaseActivity {
         } else { //upload 'em
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.upload_dialog, null);
 
-            CircleProgress circleProgress = ButterKnife.findById(view, R.id.circleProgress);
+            WhorlView whorlView = ButterKnife.findById(view, R.id.circleProgress);
             final TextView progressTextPercent = ButterKnife.findById(view, R.id.progressTextPercent);
             final TextView progressTextBytes = ButterKnife.findById(view, R.id.progressTextBytes);
             final ProgressBar progressBar = ButterKnife.findById(view, R.id.progressBar);
 
-            circleProgress.startAnim();
+            whorlView.start();
 
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AppDialog);
             alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

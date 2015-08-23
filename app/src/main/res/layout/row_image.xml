@@ -28,6 +28,7 @@
             android:id="@id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="180dp"
             android:maxHeight="1000dp"
             android:scaleType="centerCrop"
             tools:src="@drawable/header"/>
@@ -46,6 +47,7 @@
                 android:layout_gravity="bottom|left"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_medium"
+                tools:text="imageId"
                 style="@style/Bold"/>
 
             <TextView
@@ -55,6 +57,7 @@
                 android:layout_gravity="bottom|right"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_medium"
+                tools:text="just now"
                 style="@style/Bold"/>
         </FrameLayout>
 

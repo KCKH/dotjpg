@@ -47,5 +47,13 @@ public class PreferencesFragment extends android.support.v4.preference.Preferenc
                 return true;
             }
         });
+
+        findPreference("github").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alashow/dotjpg")));
+                return false;
+            }
+        });
     }
 }

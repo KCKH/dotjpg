@@ -70,6 +70,8 @@
     <string name="preferences.general">Umumy</string>
     <string name="preferences.session">Session ID</string>
     <string name="preferences.session.summary">Ýüklän suratlaryňyzy görmek we pozmak üçin açaryňyz</string>
+    <string name="preferences.github">GitHub Sahypasy</string>
+    <string name="preferences.github.summary">github.com/alashow/dotjpg</string>
     <string name="preferences.about">Barada</string>
 
     <string name="with.love">With ♥ by Alashov</string>

@@ -138,10 +138,6 @@ public class ImageDetailsActivity extends BaseActivity {
         addInfoView(label, text, isLink, null);
     }
 
-    private void addInfoView(String label, final String text, boolean isLink) {
-        addInfoView(label, text, isLink, null);
-    }
-
     private void addInfoView(
         @StringRes int label, final String text, boolean isLink, View.OnClickListener listener) {
         addInfoView(getString(label), text, isLink, listener);
@@ -174,14 +170,6 @@ public class ImageDetailsActivity extends BaseActivity {
             public void onClick(View v) {
                 U.copyToClipboard(getActivity(), textView.getText().toString());
                 U.showSnack(v, R.string.image_link_copied, U.SNACK_DEFAULT);
-            }
-        });
-
-        textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                U.showCenteredToast(getActivity(), R.string.image_link_copy);
-                return true;
             }
         });
 
