@@ -119,6 +119,7 @@ public class NewImagesAdapter extends BaseAdapter {
                         @Override
                         public void onError() {
                             U.showUnknownError(viewHolder.imageView);
+                            viewHolder.compressView.setChecked(false);
                         }
                     }, compressedFile).execute(newImage.getOriginFile());
                 } else {

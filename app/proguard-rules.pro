@@ -19,9 +19,9 @@
     @butterknife.* <methods>;
 }
 
--dontwarn android.support.v7.**
--keep class android.support.v7.** { *; }
--keep interface android.support.v7.** { *; }
+-dontwarn android.support.**
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
 
 -keep class android.support.design.widget.** { *; }
 -keep interface android.support.design.widget.** { *; }
