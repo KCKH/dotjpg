@@ -49,7 +49,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     private void registerInBackground() {
         new AsyncTask<Void, Void, String>() {
             @Override

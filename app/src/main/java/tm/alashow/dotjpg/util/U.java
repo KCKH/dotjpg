@@ -685,7 +685,7 @@ public class U {
         activity.startActivityForResult(intent, RESULT_CAMERA);
     }
 
-    private static File getBaseFolder() {
+    public static File getBaseFolder() {
         File baseFolder = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             baseFolder = new File(Environment.getExternalStorageDirectory(), Config.LOCAL_IMAGES_FOLDER);

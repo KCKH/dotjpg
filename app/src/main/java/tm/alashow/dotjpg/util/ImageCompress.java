@@ -105,8 +105,7 @@ public class ImageCompress extends AsyncTask<File, String, Boolean> {
             canvas.setMatrix(scaleMatrix);
             canvas.drawBitmap(bitmap, middleX - bitmap.getWidth() / 2, middleY - bitmap.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
 
-            ExifInterface exif;
-            exif = new ExifInterface(filePath);
+            ExifInterface exif = new ExifInterface(filePath);
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
 
             Matrix matrix = new Matrix();
