@@ -5,6 +5,7 @@
 
 package tm.alashow.dotjpg.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +27,10 @@ import java.util.HashSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import permissions.dispatcher.DeniedPermissions;
+import permissions.dispatcher.NeedsPermissions;
+import permissions.dispatcher.RuntimePermissions;
+import permissions.dispatcher.ShowsRationales;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.android.IntentManager;
@@ -38,6 +43,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 /**
  * Created by alashov on 30/07/15.
  */
+@RuntimePermissions
 public abstract class BaseActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -65,7 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         mHandler = new Handler();
 
         initBaseViews();
-        initAddImageButton();
     }
 
     @Override
@@ -174,6 +179,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        initAddImageButton();
+        BaseActivityPermissionsDispatcher.checkStorageWithCheck(this);
     }
 
     private void initAddImageButton() {
@@ -341,5 +348,26 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected int getAddImageButtonId() {
         return R.id.addImage;
+    }
+
+    @NeedsPermissions({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void checkStorage() {
+    }
+
+    // Option
+    @ShowsRationales({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void checkRationaleForStorage() {
+    }
+
+    // Option
+    @DeniedPermissions({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void checkDeniedForStorage() {
+        U.showCenteredToast(this, "Beýtmelä däldiň..");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        BaseActivityPermissionsDispatcher.onRequestPermissionsResult(this, 1, grantResults);
     }
 }

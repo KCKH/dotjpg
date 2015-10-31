@@ -15,12 +15,12 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import cz.msebera.android.httpclient.Header;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.ui.fragment.ImagesFragment;

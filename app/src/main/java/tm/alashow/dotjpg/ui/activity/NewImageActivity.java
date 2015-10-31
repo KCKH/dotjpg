@@ -35,7 +35,6 @@ import com.loopj.android.http.RequestParams;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.tt.whorlviewlibrary.WhorlView;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,6 +45,7 @@ import java.util.regex.Matcher;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.android.IntentManager;
