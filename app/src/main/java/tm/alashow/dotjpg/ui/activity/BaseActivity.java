@@ -22,6 +22,14 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.HashSet;
 
@@ -54,6 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private String mOldSubtitle;
 
     public Toolbar mToolbar;
+    private ImageView headerImageView;
     public PreferencesManager preferencesManager;
     public HashSet<OnTitleClickedListener> onTitleClickedListeners = new HashSet<>();
 
@@ -71,6 +80,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         mHandler = new Handler();
 
         initBaseViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setActiveActivity();
     }
 
     @Override
@@ -149,8 +164,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
+        headerImageView = ButterKnife.findById(mDrawerLayout, R.id.headerImage);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(final MenuItem menuItem) {
@@ -180,6 +195,23 @@ public abstract class BaseActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         initAddImageButton();
+
+        Glide.with(this)
+            .load(Config.HEADER_IMAGE)
+            .priority(Priority.HIGH)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .listener(new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    return true;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    Glide.with(getActivity()).load(resource).into(headerImageView);
+                    return true;
+                }
+            });
         BaseActivityPermissionsDispatcher.checkStorageWithCheck(this);
     }
 
@@ -232,7 +264,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setActiveActivity() {
         switch (getActivityTag()) {
             case Config.ACTIVITY_TAG_MAIN:
-                navigationView.getMenu().findItem(R.id.main).setChecked(false);
+                navigationView.getMenu().findItem(R.id.main).setChecked(true);
                 break;
             case Config.ACTIVITY_TAG_IMAGES + Config.API_ACTION_GET_ALL_MY:
                 navigationView.getMenu().findItem(R.id.my).setChecked(true);

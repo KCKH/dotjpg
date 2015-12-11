@@ -16,7 +16,7 @@ import tm.alashow.dotjpg.BuildConfig;
 import tm.alashow.dotjpg.Config;
 
 public class ApiClient {
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
     public static int DEFAULT_TIMEOUT = 40 * 1000; //40 seconds
 

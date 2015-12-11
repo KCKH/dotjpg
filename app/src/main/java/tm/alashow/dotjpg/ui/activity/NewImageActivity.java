@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -112,33 +111,10 @@ public class NewImageActivity extends BaseActivity {
     }
 
     private void initViews() {
-        newImagesAdapter = new NewImagesAdapter(this, images);
+        newImagesAdapter = new NewImagesAdapter(this, images, new OnRemoveListener());
         mListView.setAdapter(newImagesAdapter);
 
         mListView.setEmptyView(emptyView);
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AppDialog);
-
-                alertDialogBuilder.setTitle(R.string.image_new_remove);
-                alertDialogBuilder.setMessage(R.string.image_new_remove_description);
-                alertDialogBuilder.setNegativeButton(R.string.no, null);
-                alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (images.get(position).isCompressed()) {
-                            images.get(position).getCompressedFile().delete();
-                        }
-
-                        images.remove(position);
-                        newImagesAdapter.notifyDataSetChanged();
-                    }
-                });
-                alertDialogBuilder.show();
-                return true;
-            }
-        });
 
         emptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -517,6 +493,20 @@ public class NewImageActivity extends BaseActivity {
                 progressDialog.dismiss();
             }
         }, 60 * 1000);
+    }
+
+    public class OnRemoveListener {
+        public OnRemoveListener() {
+        }
+
+        public void onRemove(int position) {
+            if (images.get(position).isCompressed()) {
+                images.get(position).getCompressedFile().delete();
+            }
+
+            images.remove(position);
+            newImagesAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

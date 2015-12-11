@@ -24,17 +24,15 @@ import tm.alashow.dotjpg.R;
  * Compress image in background thread
  */
 public class ImageCompress extends AsyncTask<File, String, Boolean> {
-    private Context context;
     private OnImageCompressListener imageCompressListener;
     private ProgressDialog dialog;
     private int COMPRESS_QUALITY = 70;
     private File OUTPUT;
 
     public ImageCompress(Context context, OnImageCompressListener imageCompressListener, File output) {
-        this.context = context;
         this.imageCompressListener = imageCompressListener;
         this.OUTPUT = output;
-        dialog = U.createActionLoading(this.context);
+        dialog = U.createActionLoading(context);
         dialog.setMessage(context.getString(R.string.image_compressing));
     }
 

@@ -6,7 +6,9 @@
 package tm.alashow.dotjpg.ui.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import tm.alashow.dotjpg.Config;
 import tm.alashow.dotjpg.R;
 import tm.alashow.dotjpg.android.IntentManager;
 import tm.alashow.dotjpg.model.NewImage;
+import tm.alashow.dotjpg.ui.activity.NewImageActivity;
 import tm.alashow.dotjpg.util.DotjpgUtils;
 import tm.alashow.dotjpg.util.ImageCompress;
 import tm.alashow.dotjpg.util.U;
@@ -34,16 +37,18 @@ import tm.alashow.dotjpg.util.U;
  */
 public class NewImagesAdapter extends BaseAdapter {
 
-    private Context context;
+    private Context mContext;
     private LayoutInflater inflater;
     private ArrayList<NewImage> images = new ArrayList<>();
+    private NewImageActivity.OnRemoveListener onRemoveListener;
 
-    public NewImagesAdapter(Context context, ArrayList<NewImage> images) {
+    public NewImagesAdapter(Context context, ArrayList<NewImage> images, NewImageActivity.OnRemoveListener onRemoveListener) {
         this.images = images;
+        this.onRemoveListener = onRemoveListener;
         if (context != null) {
-            this.context = context;
+            this.mContext = context;
             try {
-                this.inflater = LayoutInflater.from(this.context);
+                this.inflater = LayoutInflater.from(this.mContext);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -78,13 +83,13 @@ public class NewImagesAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.setViews(context, newImage.getFile());
+        viewHolder.setViews(mContext, newImage.getFile());
 
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //open image with system image viewer
-                IntentManager.with(context).openLocalImage(newImage.getFile());
+                IntentManager.with(mContext).openLocalImage(newImage.getFile());
             }
         });
 
@@ -102,18 +107,18 @@ public class NewImagesAdapter extends BaseAdapter {
                     //we have old compressed file, don't compress file again
                     if (newImage.hasCompressed()) {
                         newImage.setCompressed(true);
-                        viewHolder.setViews(context, newImage.getFile());
+                        viewHolder.setViews(mContext, newImage.getFile());
                         return;
                     }
 
                     //generate new file name then execute compress task
                     final File compressedFile = U.generateCompressFilePath();
-                    new ImageCompress(context, new ImageCompress.OnImageCompressListener() {
+                    new ImageCompress(mContext, new ImageCompress.OnImageCompressListener() {
                         @Override
                         public void onSuccess(File output) {
                             newImage.setCompressedFile(compressedFile);
                             newImage.setCompressed(true);
-                            viewHolder.setViews(context, newImage.getFile());
+                            viewHolder.setViews(mContext, newImage.getFile());
                         }
 
                         @Override
@@ -124,8 +129,26 @@ public class NewImagesAdapter extends BaseAdapter {
                     }, compressedFile).execute(newImage.getOriginFile());
                 } else {
                     newImage.setCompressed(false);
-                    viewHolder.setViews(context, newImage.getFile());
+                    viewHolder.setViews(mContext, newImage.getFile());
                 }
+            }
+        });
+
+        viewHolder.removeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext, R.style.AppDialog);
+
+                alertDialogBuilder.setTitle(R.string.image_new_remove);
+                alertDialogBuilder.setMessage(R.string.image_new_remove_description);
+                alertDialogBuilder.setNegativeButton(R.string.no, null);
+                alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onRemoveListener.onRemove(position);
+                    }
+                });
+                alertDialogBuilder.show();
             }
         });
 
@@ -140,6 +163,7 @@ public class NewImagesAdapter extends BaseAdapter {
         @Bind(R.id.size) TextView sizeView;
         @Bind(R.id.type) TextView typeView;
         @Bind(R.id.compress) CheckBox compressView;
+        @Bind(R.id.remove) View removeView;
 
         ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
@@ -148,7 +172,7 @@ public class NewImagesAdapter extends BaseAdapter {
         /**
          * Fill some views with data
          *
-         * @param context context
+         * @param context mContext
          * @param file    image to show about
          */
         public void setViews(Context context, File file) {

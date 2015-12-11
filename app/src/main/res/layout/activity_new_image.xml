@@ -24,12 +24,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
+            <tm.alashow.dotjpg.ui.view.ListViewExt
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:listSelector="@drawable/white_selector"
+                android:listSelector="@android:color/transparent"
                 android:layout_above="@+id/upload"/>
 
             <TextView

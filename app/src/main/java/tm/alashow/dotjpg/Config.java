@@ -10,7 +10,8 @@ package tm.alashow.dotjpg;
  */
 public class Config {
 
-    public static final String SERVER = "http://dotjpg.co/";
+    public static final String SERVER = "https://dotjpg.co/";
+    public static final String HEADER_IMAGE = SERVER + "header.jpg";
     public static final String API = "api/";
     public static final String GCM_SENDER_ID = "835054112702";
 
